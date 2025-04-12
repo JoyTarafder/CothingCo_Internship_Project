@@ -4,14 +4,17 @@ import Chart from "@/components/Chart";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import StatsOverview from "@/components/StatsOverview";
-import { useEffect, useState } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useEffect, useRef, useState } from "react";
 import {
   FiActivity,
-  FiBarChart2,
   FiCalendar,
   FiCheckCircle,
   FiClock,
   FiDollarSign,
+  FiDownload,
   FiPackage,
   FiShoppingBag,
   FiUsers,
@@ -134,6 +137,10 @@ export default function Dashboard() {
     },
   ];
 
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const salesChartRef = useRef(null);
+  const orderStatusChartRef = useRef(null);
+
   // Simulate data loading
   useEffect(() => {
     // Simulate API call to get data
@@ -230,6 +237,477 @@ export default function Dashboard() {
     }, 1000);
   }, []);
 
+  // Function to generate and download PDF report
+  const generatePdfReport = async () => {
+    try {
+      setIsGeneratingPdf(true);
+
+      // Create a new PDF document
+      const doc = new jsPDF("p", "mm", "a4");
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      // Add cover page with gradient background
+      const addGradientBackground = () => {
+        // Create gradient from blue to light blue
+        const gradient = doc.setFillColor(59, 130, 246);
+        doc.rect(0, 0, pageWidth, pageHeight, "F");
+
+        // Add white overlay at the bottom to create a fade effect
+        doc.setFillColor(255, 255, 255, 0.9);
+        doc.rect(0, pageHeight / 2, pageWidth, pageHeight / 2, "F");
+      };
+
+      // Add cover page
+      addGradientBackground();
+
+      // Add logo (circular shape with letter A)
+      doc.setFillColor(255, 255, 255);
+      doc.circle(pageWidth / 2, 60, 15, "F");
+      doc.setTextColor(59, 130, 246);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(24);
+      doc.text("A", pageWidth / 2, 65, { align: "center" });
+
+      // Add report title
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(28);
+      doc.text("Dashboard Report", pageWidth / 2, 100, { align: "center" });
+
+      // Add date range
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(16);
+      doc.text("Apr 1 - Apr 30, 2025", pageWidth / 2, 115, { align: "center" });
+
+      // Add generation date
+      const today = new Date();
+      doc.setFontSize(12);
+      doc.text(
+        `Generated on: ${today.toLocaleDateString()}`,
+        pageWidth / 2,
+        125,
+        { align: "center" }
+      );
+
+      // Add company name at the bottom
+      doc.setFontSize(14);
+      doc.text("Admin Panel", pageWidth / 2, pageHeight - 30, {
+        align: "center",
+      });
+      doc.setFontSize(10);
+      doc.text("© 2025 All Rights Reserved", pageWidth / 2, pageHeight - 20, {
+        align: "center",
+      });
+
+      // Add new page for content
+      doc.addPage();
+
+      // Add header to each page
+      const addHeader = (pageNumber) => {
+        doc.setFillColor(59, 130, 246);
+        doc.rect(0, 0, pageWidth, 15, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.text(`Admin Dashboard Report - April 2025`, 10, 10);
+        doc.setTextColor(255, 255, 255);
+        doc.text(`Page ${pageNumber}`, pageWidth - 10, 10, { align: "right" });
+      };
+
+      // Add header to the content page
+      addHeader(2);
+
+      // Add table of contents
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text("Contents", 14, 25);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text("1. Performance Overview", 14, 35);
+      doc.text("2. Sales Overview", 14, 42);
+      doc.text("3. Order Status", 14, 49);
+      doc.text("4. Low Stock Items", 14, 56);
+
+      // Add new page for actual content
+      doc.addPage();
+      addHeader(3);
+
+      // Add performance metrics section
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      doc.text("1. Performance Overview", 14, 25);
+
+      // Add section separator
+      doc.setDrawColor(59, 130, 246);
+      doc.setLineWidth(0.5);
+      doc.line(14, 27, 195, 27);
+
+      // Create a table for the performance stats
+      const statsTableData = statsData.map((stat) => [
+        stat.title,
+        stat.value,
+        `${stat.change > 0 ? "+" : ""}${stat.change}%`,
+        stat.change > 0 ? "↑" : "↓",
+      ]);
+
+      autoTable(doc, {
+        head: [["Metric", "Value", "Change", ""]],
+        body: statsTableData,
+        startY: 35,
+        theme: "grid",
+        headStyles: {
+          fillColor: [59, 130, 246],
+          textColor: 255,
+          fontStyle: "bold",
+        },
+        styles: { fontSize: 10, cellPadding: 4 },
+        columnStyles: {
+          0: { cellWidth: 60 },
+          1: { cellWidth: 40, halign: "center" },
+          2: { cellWidth: 30, halign: "center" },
+          3: { cellWidth: 10, halign: "center" },
+        },
+        bodyStyles: {
+          lineColor: [220, 220, 220],
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240],
+        },
+      });
+
+      // Add sales section
+      doc.addPage();
+      addHeader(4);
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      doc.text("2. Sales Overview", 14, 25);
+
+      // Add section separator
+      doc.setDrawColor(59, 130, 246);
+      doc.setLineWidth(0.5);
+      doc.line(14, 27, 195, 27);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(
+        "Sales have increased by 15% compared to the previous year.",
+        14,
+        35
+      );
+
+      // Capture sales chart if available
+      if (salesChartRef.current) {
+        const salesChartCanvas = await html2canvas(salesChartRef.current, {
+          scale: 2,
+          backgroundColor: null,
+          logging: false,
+        });
+
+        const salesChartImgData = salesChartCanvas.toDataURL("image/png");
+        const salesChartImgWidth = 180;
+        const salesChartImgHeight =
+          (salesChartCanvas.height * salesChartImgWidth) /
+          salesChartCanvas.width;
+
+        doc.addImage(
+          salesChartImgData,
+          "PNG",
+          15,
+          40,
+          salesChartImgWidth,
+          salesChartImgHeight
+        );
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "italic");
+        doc.text(
+          "Figure 1: Sales trends comparing 2024 and 2025",
+          105,
+          40 + salesChartImgHeight + 5,
+          { align: "center" }
+        );
+      }
+
+      // Add monthly sales data as a table
+      const monthsData = salesChartData.labels;
+      const currentYearData = salesChartData.datasets[0].data;
+      const previousYearData = salesChartData.datasets[1].data;
+
+      const salesTableData = monthsData.map((month, index) => [
+        month,
+        `$${currentYearData[index].toLocaleString()}`,
+        `$${previousYearData[index].toLocaleString()}`,
+        `${(
+          ((currentYearData[index] - previousYearData[index]) /
+            previousYearData[index]) *
+          100
+        ).toFixed(1)}%`,
+      ]);
+
+      const salesTableY = salesChartRef.current
+        ? 40 +
+          (salesChartRef.current.offsetHeight * 180) /
+            salesChartRef.current.offsetWidth +
+          15
+        : 40;
+
+      autoTable(doc, {
+        head: [["Month", "2025 Sales", "2024 Sales", "YoY Growth"]],
+        body: salesTableData,
+        startY: salesTableY,
+        theme: "grid",
+        headStyles: {
+          fillColor: [59, 130, 246],
+          textColor: 255,
+          fontStyle: "bold",
+        },
+        styles: { fontSize: 10, cellPadding: 4 },
+        columnStyles: {
+          0: { cellWidth: 30 },
+          1: { cellWidth: 40, halign: "right" },
+          2: { cellWidth: 40, halign: "right" },
+          3: { cellWidth: 30, halign: "center" },
+        },
+        bodyStyles: {
+          lineColor: [220, 220, 220],
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240],
+        },
+      });
+
+      // Add order status section
+      doc.addPage();
+      addHeader(5);
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      doc.text("3. Order Status", 14, 25);
+
+      // Add section separator
+      doc.setDrawColor(59, 130, 246);
+      doc.setLineWidth(0.5);
+      doc.line(14, 27, 195, 27);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text("Current distribution of orders by status:", 14, 35);
+
+      // Create a layout with chart and table side by side
+      // Capture order status chart if available
+      if (orderStatusChartRef.current) {
+        const orderChartCanvas = await html2canvas(
+          orderStatusChartRef.current,
+          {
+            scale: 2,
+            backgroundColor: null,
+            logging: false,
+          }
+        );
+
+        const orderChartImgData = orderChartCanvas.toDataURL("image/png");
+        const orderChartImgWidth = 90;
+        const orderChartImgHeight =
+          (orderChartCanvas.height * orderChartImgWidth) /
+          orderChartCanvas.width;
+
+        doc.addImage(
+          orderChartImgData,
+          "PNG",
+          15,
+          45,
+          orderChartImgWidth,
+          orderChartImgHeight
+        );
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "italic");
+        doc.text(
+          "Figure 2: Order status distribution",
+          60,
+          45 + orderChartImgHeight + 5,
+          { align: "center" }
+        );
+      }
+
+      // Create order status table
+      const orderStatusTableData = ordersStatusData.labels.map(
+        (status, index) => [
+          status,
+          ordersStatusData.datasets[0].data[index],
+          `${(
+            (ordersStatusData.datasets[0].data[index] /
+              ordersStatusData.datasets[0].data.reduce((a, b) => a + b, 0)) *
+            100
+          ).toFixed(1)}%`,
+        ]
+      );
+
+      autoTable(doc, {
+        head: [["Status", "Count", "Percentage"]],
+        body: orderStatusTableData,
+        startY: 45,
+        margin: { left: 115 },
+        theme: "grid",
+        headStyles: {
+          fillColor: [59, 130, 246],
+          textColor: 255,
+          fontStyle: "bold",
+        },
+        styles: { fontSize: 10, cellPadding: 4 },
+        columnStyles: {
+          0: { cellWidth: 40 },
+          1: { cellWidth: 20, halign: "center" },
+          2: { cellWidth: 30, halign: "center" },
+        },
+        bodyStyles: {
+          lineColor: [220, 220, 220],
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240],
+        },
+      });
+
+      // Add analysis text
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text("Order Analysis:", 14, 120);
+
+      const analysisText =
+        "The majority of orders (68%) are successfully delivered to customers, while 25% are still in the processing stage. " +
+        "Only 8% of orders have been canceled, which is within our target range. " +
+        "The current pending order rate of 15% is slightly higher than our target of 10%, suggesting a need for process optimization.";
+
+      const splitAnalysis = doc.splitTextToSize(analysisText, 180);
+      doc.text(splitAnalysis, 14, 130);
+
+      // Add low stock items section
+      doc.addPage();
+      addHeader(6);
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      doc.text("4. Low Stock Items", 14, 25);
+
+      // Add section separator
+      doc.setDrawColor(59, 130, 246);
+      doc.setLineWidth(0.5);
+      doc.line(14, 27, 195, 27);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text("The following products need to be restocked soon:", 14, 35);
+
+      // Create low stock items table
+      const lowStockTableData = lowStockData.labels.map((product, index) => [
+        product,
+        lowStockData.datasets[0].data[index],
+        lowStockData.datasets[0].data[index] <= 5 ? "Critical" : "Low",
+      ]);
+
+      autoTable(doc, {
+        head: [["Product", "Items Left", "Status"]],
+        body: lowStockTableData,
+        startY: 45,
+        theme: "grid",
+        headStyles: {
+          fillColor: [59, 130, 246],
+          textColor: 255,
+          fontStyle: "bold",
+        },
+        styles: { fontSize: 10, cellPadding: 4 },
+        columnStyles: {
+          0: { cellWidth: 80 },
+          1: { cellWidth: 40, halign: "center" },
+          2: { cellWidth: 40, halign: "center" },
+        },
+        bodyStyles: {
+          lineColor: [220, 220, 220],
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240],
+        },
+        didDrawCell: (data) => {
+          // Color the status cell based on stock level
+          if (data.column.index === 2 && data.section === "body") {
+            const status = data.cell.raw;
+            if (status === "Critical") {
+              doc.setFillColor(239, 68, 68, 0.2);
+              doc.rect(
+                data.cell.x,
+                data.cell.y,
+                data.cell.width,
+                data.cell.height,
+                "F"
+              );
+              doc.setTextColor(239, 68, 68);
+              doc.text(
+                status,
+                data.cell.x + data.cell.width / 2,
+                data.cell.y + data.cell.height / 2 + 1,
+                { align: "center", baseline: "middle" }
+              );
+              return false; // Prevent default text rendering
+            }
+          }
+          return true;
+        },
+      });
+
+      // Add recommendations
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("Recommendations:", 14, 100);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      const recommendations = [
+        "1. Place immediate orders for Wireless Earbuds and Bluetooth Speaker (critical stock levels).",
+        "2. Schedule reorders for Premium Headphones and Fitness Smartwatch within 7 days.",
+        "3. Review sales forecasts to optimize inventory levels and prevent stockouts.",
+      ];
+
+      let yPos = 110;
+      recommendations.forEach((rec) => {
+        doc.text(rec, 14, yPos);
+        yPos += 8;
+      });
+
+      // Add footer with generation details to every page
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+
+        if (i > 1) {
+          // Skip cover page
+          doc.setFontSize(8);
+          doc.setTextColor(100);
+          doc.text(
+            `Generated by Admin Panel | ${today.toLocaleDateString()} ${today.toLocaleTimeString()}`,
+            pageWidth / 2,
+            pageHeight - 10,
+            { align: "center" }
+          );
+        }
+      }
+
+      // Save the PDF
+      doc.save("admin-dashboard-report.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Failed to generate PDF report. Please try again.");
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   return (
     <div
       className="flex h-screen bg-gray-50 dark:bg-gray-900"
@@ -254,9 +732,41 @@ export default function Dashboard() {
                   <FiCalendar className="mr-2 h-4 w-4" />
                   Apr 1 - Apr 30, 2025
                 </button>
-                <button className="inline-flex items-center text-sm font-medium px-4 py-2 bg-primary text-white rounded-lg shadow-sm hover:bg-primary-dark transition-colors">
-                  <FiBarChart2 className="mr-2 h-4 w-4" />
-                  Generate Report
+                <button
+                  className="inline-flex items-center text-sm font-medium px-4 py-2 bg-primary text-white rounded-lg shadow-sm hover:bg-primary-dark transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                  onClick={generatePdfReport}
+                  disabled={isGeneratingPdf}
+                >
+                  {isGeneratingPdf ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <FiDownload className="mr-2 h-4 w-4" />
+                      Generate Report
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -288,7 +798,7 @@ export default function Dashboard() {
                     </button>
                   </div>
                 </div>
-                <div className="h-[calc(100%-56px)]">
+                <div className="h-[calc(100%-56px)]" ref={salesChartRef}>
                   <Chart
                     title="Sales Trends"
                     type="line"
@@ -308,7 +818,10 @@ export default function Dashboard() {
                   </button>
                 </div>
                 <div className="h-[calc(100%-56px)] flex flex-col">
-                  <div className="flex-1 flex items-center justify-center">
+                  <div
+                    className="flex-1 flex items-center justify-center"
+                    ref={orderStatusChartRef}
+                  >
                     <Chart
                       title="Order Status"
                       type="bar"

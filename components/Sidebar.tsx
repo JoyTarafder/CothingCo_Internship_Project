@@ -28,9 +28,15 @@ export default function Sidebar() {
 
   return (
     <aside className="h-screen w-64 fixed top-0 left-0 overflow-y-auto bg-gradient-to-b from-indigo-900 via-background-dark to-gray-900 shadow-xl">
-      <div className="px-6 py-8 border-b border-gray-700/50">
-        <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-blue-400 flex items-center justify-center">
+      <div
+        className="px-6 py-8 border-b border-gray-700/50"
+        suppressHydrationWarning
+      >
+        <div className="flex items-center space-x-3" suppressHydrationWarning>
+          <div
+            className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-blue-400 flex items-center justify-center"
+            suppressHydrationWarning
+          >
             <span className="text-white font-bold text-xl">A</span>
           </div>
           <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">

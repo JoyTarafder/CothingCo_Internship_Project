@@ -231,12 +231,15 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <div
+      className="flex h-screen bg-gray-50 dark:bg-gray-900"
+      suppressHydrationWarning
+    >
       <Sidebar />
-      <div className="flex-1 ml-64">
+      <div className="flex-1 ml-64" suppressHydrationWarning>
         <Header title="Dashboard" />
         <main className="p-6 overflow-y-auto">
-          <div className="mb-8">
+          <div className="mb-8" suppressHydrationWarning>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
               <div>
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">

@@ -81,7 +81,7 @@ const Sparkline = ({
   };
 
   return (
-    <div className="h-[30px]">
+    <div className="h-[30px]" suppressHydrationWarning>
       <svg width={width} height={height} className="overflow-visible">
         <g dangerouslySetInnerHTML={{ __html: generatePath() }} />
       </svg>
@@ -95,29 +95,46 @@ export default function StatsOverview({
   timeRange = "Last 30 days",
 }: StatsOverviewProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5">
-      <div className="flex justify-between items-center mb-5">
+    <div
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5"
+      suppressHydrationWarning
+    >
+      <div
+        className="flex justify-between items-center mb-5"
+        suppressHydrationWarning
+      >
         <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
           {title}
         </h2>
-        <div className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+        <div
+          className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full"
+          suppressHydrationWarning
+        >
           {timeRange}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
+        suppressHydrationWarning
+      >
         {stats.map((stat, index) => (
           <div
             key={index}
             className="relative p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden group hover:shadow-md transition-all duration-300"
+            suppressHydrationWarning
           >
             {/* Background decoration */}
             <div
               className={`absolute -right-6 -bottom-6 w-24 h-24 rounded-full opacity-5 ${stat.color} group-hover:scale-125 transition-transform duration-500`}
+              suppressHydrationWarning
             ></div>
 
-            <div className="flex items-center justify-between mb-3">
-              <div className="z-10">
+            <div
+              className="flex items-center justify-between mb-3"
+              suppressHydrationWarning
+            >
+              <div className="z-10" suppressHydrationWarning>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   {stat.title}
                 </p>
@@ -127,13 +144,17 @@ export default function StatsOverview({
               </div>
               <div
                 className={`p-3 rounded-full ${stat.color} bg-opacity-10 text-opacity-90`}
+                suppressHydrationWarning
               >
                 {stat.icon}
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            <div
+              className="flex items-center justify-between"
+              suppressHydrationWarning
+            >
+              <div className="flex items-center" suppressHydrationWarning>
                 <span
                   className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${
                     stat.change >= 0

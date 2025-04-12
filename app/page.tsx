@@ -4,6 +4,7 @@ import Chart from "@/components/Chart";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import StatsOverview from "@/components/StatsOverview";
+import { motion } from "framer-motion";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -776,10 +777,10 @@ export default function Dashboard() {
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
             <div className="xl:col-span-2">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5 h-96">
-                <div className="flex justify-between items-center mb-5">
+              <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-6 h-96 transition-all duration-300 hover:shadow-2xl">
+                <div className="flex justify-between items-center mb-6">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                    <h2 className="text-xl font-bold text-gray-800 dark:text-white">
                       Sales Overview
                     </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -787,13 +788,13 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <button className="text-xs px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm">
                       Weekly
                     </button>
-                    <button className="text-xs px-3 py-1 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors">
+                    <button className="text-xs px-4 py-1.5 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors shadow-sm">
                       Monthly
                     </button>
-                    <button className="text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <button className="text-xs px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm">
                       Yearly
                     </button>
                   </div>
@@ -808,9 +809,9 @@ export default function Dashboard() {
               </div>
             </div>
             <div>
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5 h-96">
-                <div className="flex justify-between items-center mb-5">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+              <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-6 h-96 transition-all duration-300 hover:shadow-2xl">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-white">
                     Order Status
                   </h2>
                   <button className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
@@ -830,7 +831,7 @@ export default function Dashboard() {
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4 mt-4">
-                    <div className="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <div className="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm backdrop-blur-sm hover:shadow-md transition-all duration-300">
                       <div className="flex items-center mb-1">
                         <FiCheckCircle className="h-4 w-4 text-green-500 mr-1" />
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -841,7 +842,7 @@ export default function Dashboard() {
                         68
                       </p>
                     </div>
-                    <div className="flex flex-col items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <div className="flex flex-col items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm backdrop-blur-sm hover:shadow-md transition-all duration-300">
                       <div className="flex items-center mb-1">
                         <FiClock className="h-4 w-4 text-blue-500 mr-1" />
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -858,152 +859,282 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5">
-              <div className="flex justify-between items-center mb-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 mt-36">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-6 transition-all duration-300 hover:shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+                    <FiShoppingBag className="h-5 w-5 mr-2 text-primary" />
                     Recent Orders
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     Last 5 orders placed
                   </p>
                 </div>
-                <button className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm">
+                <button className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm flex items-center gap-1 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg transition-all hover:bg-blue-100 dark:hover:bg-blue-900/30">
                   View All
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto rounded-xl">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead>
+                  <thead className="bg-gray-50 dark:bg-gray-700/50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-4 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Order ID
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-4 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Customer
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-4 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Date
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-4 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Status
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <th className="px-4 py-3.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Amount
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+                  <tbody className="bg-white dark:bg-gray-800/30 divide-y divide-gray-200 dark:divide-gray-700 backdrop-blur-sm">
+                    <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <td className="px-4 py-3.5 text-sm font-medium text-gray-900 dark:text-white">
                         #ORD-0103
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        John Doe
+                      <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <div className="h-7 w-7 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mr-2 text-xs font-bold">
+                            JD
+                          </div>
+                          John Doe
+                        </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        Apr 12, 2025
+                      <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <FiCalendar className="h-3.5 w-3.5 mr-1.5 text-gray-400" />
+                          Apr 12, 2025
+                        </div>
                       </td>
-                      <td className="px-4 py-3">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                      <td className="px-4 py-3.5">
+                        <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
                           Delivered
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">
+                      <td className="px-4 py-3.5 text-sm text-gray-900 dark:text-white font-medium">
                         $125.00
                       </td>
                     </tr>
-                    <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+                    <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <td className="px-4 py-3.5 text-sm font-medium text-gray-900 dark:text-white">
                         #ORD-0102
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        Jane Smith
+                      <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <div className="h-7 w-7 rounded-full bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 flex items-center justify-center mr-2 text-xs font-bold">
+                            JS
+                          </div>
+                          Jane Smith
+                        </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        Apr 11, 2025
+                      <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <FiCalendar className="h-3.5 w-3.5 mr-1.5 text-gray-400" />
+                          Apr 11, 2025
+                        </div>
                       </td>
-                      <td className="px-4 py-3">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                      <td className="px-4 py-3.5">
+                        <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
                           Processing
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">
+                      <td className="px-4 py-3.5 text-sm text-gray-900 dark:text-white font-medium">
                         $85.50
                       </td>
                     </tr>
-                    <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+                    <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <td className="px-4 py-3.5 text-sm font-medium text-gray-900 dark:text-white">
                         #ORD-0101
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        Mike Johnson
+                      <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <div className="h-7 w-7 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center mr-2 text-xs font-bold">
+                            MJ
+                          </div>
+                          Mike Johnson
+                        </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        Apr 10, 2025
+                      <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <FiCalendar className="h-3.5 w-3.5 mr-1.5 text-gray-400" />
+                          Apr 10, 2025
+                        </div>
                       </td>
-                      <td className="px-4 py-3">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                      <td className="px-4 py-3.5">
+                        <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
                           Pending
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium">
+                      <td className="px-4 py-3.5 text-sm text-gray-900 dark:text-white font-medium">
                         $220.75
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5">
-              <div className="flex justify-between items-center mb-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-6 transition-all duration-300 hover:shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-5">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+                    <FiPackage className="h-5 w-5 mr-2 text-amber-500" />
                     Low Stock Items
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     Products that need reordering
                   </p>
                 </div>
-                <button className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm">
+                <button className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm flex items-center gap-1 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg transition-all hover:bg-blue-100 dark:hover:bg-blue-900/30">
                   View All
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                 </button>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-4 mt-6">
                 {[
-                  "Premium Headphones",
-                  "Fitness Smartwatch",
-                  "Wireless Earbuds",
-                  "Bluetooth Speaker",
+                  {
+                    name: "Premium Headphones",
+                    stock: 12,
+                    color: "bg-blue-500",
+                    critical: false,
+                    image: "🎧",
+                  },
+                  {
+                    name: "Fitness Smartwatch",
+                    stock: 8,
+                    color: "bg-green-500",
+                    critical: false,
+                    image: "⌚",
+                  },
+                  {
+                    name: "Wireless Earbuds",
+                    stock: 5,
+                    color: "bg-amber-500",
+                    critical: true,
+                    image: "🎵",
+                  },
+                  {
+                    name: "Bluetooth Speaker",
+                    stock: 3,
+                    color: "bg-red-500",
+                    critical: true,
+                    image: "🔊",
+                  },
                 ].map((item, index) => (
-                  <div
+                  <motion.div
                     key={index}
-                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    className="flex items-center justify-between p-4 bg-white dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all"
                   >
                     <div className="flex items-center">
-                      <div className="h-10 w-10 rounded-md bg-gray-200 dark:bg-gray-600 flex items-center justify-center mr-3">
-                        <FiPackage className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                      <div
+                        className={`h-12 w-12 rounded-lg ${item.color} bg-opacity-10 dark:bg-opacity-20 flex items-center justify-center mr-4 text-xl`}
+                      >
+                        {item.image}
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-800 dark:text-white">
-                          {item}
+                          {item.name}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {["12", "8", "5", "3"][index]} items left
-                        </p>
+                        <div className="flex items-center mt-1">
+                          <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                            <div
+                              className={`h-2.5 rounded-full ${
+                                item.stock <= 3
+                                  ? "bg-red-500"
+                                  : item.stock <= 8
+                                  ? "bg-amber-500"
+                                  : "bg-green-500"
+                              }`}
+                              style={{
+                                width: `${Math.min(item.stock * 8, 100)}%`,
+                              }}
+                            ></div>
+                          </div>
+                          <span
+                            className={`ml-2 text-xs font-bold ${
+                              item.stock <= 3
+                                ? "text-red-500 dark:text-red-400"
+                                : item.stock <= 8
+                                ? "text-amber-500 dark:text-amber-400"
+                                : "text-green-500 dark:text-green-400"
+                            }`}
+                          >
+                            {item.stock} left
+                          </span>
+                          {item.critical && (
+                            <span className="ml-2 px-1.5 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 rounded-sm">
+                              Critical
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <button className="px-3 py-1 text-xs rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors">
+                    <button className="ml-2 px-3 py-1.5 text-xs rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors shadow-sm hover:shadow-md flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-3.5 w-3.5 mr-1"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
                       Reorder
                     </button>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
 
           <footer className="mt-8 py-4 text-center text-sm text-gray-500 border-t border-gray-200 dark:border-gray-800">

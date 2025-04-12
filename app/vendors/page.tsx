@@ -38,7 +38,16 @@ export default function VendorManagementPage() {
   ]);
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [newVendor, setNewVendor] = useState<Vendor>({
+    id: "",
+    name: "",
+    type: "",
+    email: "",
+    contact: "",
+    address: "",
+  });
+  const [editVendor, setEditVendor] = useState<Vendor>({
     id: "",
     name: "",
     type: "",
@@ -74,12 +83,38 @@ export default function VendorManagementPage() {
     });
   };
 
+  const handleEditVendor = (vendor: Vendor) => {
+    setEditVendor({ ...vendor });
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editVendor.name || !editVendor.email) return;
+
+    setVendors(
+      vendors.map((vendor) =>
+        vendor.id === editVendor.id ? { ...editVendor } : vendor
+      )
+    );
+    setShowEditModal(false);
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setNewVendor({
       ...newVendor,
+      [name]: value,
+    });
+  };
+
+  const handleEditInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setEditVendor({
+      ...editVendor,
       [name]: value,
     });
   };
@@ -215,6 +250,7 @@ export default function VendorManagementPage() {
                             <button
                               className="w-8 h-8 rounded-md flex items-center justify-center bg-green-100 text-green-600 hover:bg-green-200"
                               aria-label={`Edit ${vendor.name}`}
+                              onClick={() => handleEditVendor(vendor)}
                             >
                               <FiEdit className="w-4 h-4" />
                             </button>
@@ -275,7 +311,9 @@ export default function VendorManagementPage() {
                   Next
                 </button>
               </div>
+              {/* Desktop pagination */}
               <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                {/* Pagination info */}
                 <div>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
                     Showing{" "}
@@ -296,6 +334,7 @@ export default function VendorManagementPage() {
                     results
                   </p>
                 </div>
+                {/* Pagination controls */}
                 <div>
                   <nav
                     className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
@@ -485,6 +524,147 @@ export default function VendorManagementPage() {
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                   >
                     Add Vendor
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Vendor Modal */}
+          {showEditModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
+                    Edit Vendor
+                  </h3>
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <FiX className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="edit-name"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Vendor Name
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-name"
+                      name="name"
+                      value={editVendor.name}
+                      onChange={handleEditInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      placeholder="Enter vendor name"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="edit-type"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Vendor Type
+                    </label>
+                    <select
+                      id="edit-type"
+                      name="type"
+                      value={editVendor.type}
+                      onChange={handleEditInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    >
+                      <option value="">Select vendor type</option>
+                      <option value="Shop">Shop</option>
+                      <option value="Manufacturer">Manufacturer</option>
+                      <option value="Distributor">Distributor</option>
+                      <option value="Wholesaler">Wholesaler</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="edit-email"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="edit-email"
+                      name="email"
+                      value={editVendor.email}
+                      onChange={handleEditInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      placeholder="Enter email address"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="edit-contact"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Contact Number
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-contact"
+                      name="contact"
+                      value={editVendor.contact}
+                      onChange={handleEditInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      placeholder="Enter contact number"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="edit-address"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-address"
+                      name="address"
+                      value={editVendor.address}
+                      onChange={handleEditInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      placeholder="Enter address"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="edit-comment"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Comment (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-comment"
+                      name="comment"
+                      value={editVendor.comment || ""}
+                      onChange={handleEditInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      placeholder="Enter comment"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-2 mt-6">
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveEdit}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Save Changes
                   </button>
                 </div>
               </div>

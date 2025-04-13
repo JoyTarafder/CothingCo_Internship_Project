@@ -204,7 +204,7 @@ export default function Settings() {
                         </span>
                       </div>
                       <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                        $24.8K
+                        ৳24.8K
                       </p>
                     </div>
                   </div>

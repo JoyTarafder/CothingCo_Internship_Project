@@ -540,7 +540,7 @@ export default function OrdersPage() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                          ${order.total.toFixed(2)}
+                          ৳{order.total.toFixed(2)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
@@ -720,7 +720,7 @@ export default function OrdersPage() {
                         </span>
                       </div>
                       <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                        ${selectedOrder.total.toFixed(2)}
+                        ৳{selectedOrder.total.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -845,7 +845,7 @@ export default function OrdersPage() {
                       <div className="relative rounded-lg shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                           <span className="text-gray-500 dark:text-gray-400 sm:text-sm">
-                            $
+                            ৳
                           </span>
                         </div>
                         <input

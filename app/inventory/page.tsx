@@ -87,7 +87,7 @@ export default function InventoryPage() {
           </div>
 
           {/* Feedback Message */}
-          <AnimatePresence>
+          {/* <AnimatePresence>
             {feedback.message && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -102,7 +102,7 @@ export default function InventoryPage() {
                 {feedback.message}
               </motion.div>
             )}
-          </AnimatePresence>
+          </AnimatePresence> */}
 
           {/* Category Section Header */}
           <div className="mb-8 flex justify-between items-center">

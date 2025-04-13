@@ -10,11 +10,28 @@ import {
   FiActivity,
   FiCheckCircle,
   FiClock,
-  FiDollarSign,
   FiPackage,
   FiShoppingBag,
   FiUsers,
 } from "react-icons/fi";
+
+// Custom Taka Icon component
+const TakaIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M17 6h-7.5c-1.93 0-3.5 1.57-3.5 3.5 0 1.93 1.57 3.5 3.5 3.5h3.5" />
+    <path d="M7 14v4" />
+    <path d="M11 10l-4 4" />
+  </svg>
+);
 
 export default function Dashboard() {
   // Time filter for sales overview
@@ -127,11 +144,11 @@ export default function Dashboard() {
   const statsData = [
     {
       title: "Total Revenue",
-      value: "$48,258.42",
+      value: "৳48,258.42",
       change: 12.5,
       sparklineData: [5, 10, 8, 15, 12, 18, 16, 20, 18, 24, 20, 25],
       color: "text-blue-500",
-      icon: <FiDollarSign className="h-6 w-6 text-blue-500" />,
+      icon: <TakaIcon className="h-6 w-6 text-blue-500" />,
     },
     {
       title: "Total Orders",
@@ -256,6 +273,16 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout title="Dashboard">
+      {/* Header with gradient background */}
+      <div className="mb-8 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-xl p-6 shadow-md">
+        <div className="flex flex-col text-white">
+          <h1 className="text-3xl font-bold">Deshborad Overview</h1>
+          <p className="mt-2 text-blue-100">
+            Welcome to your business dashboard, showing key metrics for sales,
+            inventory, and customers.
+          </p>
+        </div>
+      </div>
       {/* Main Dashboard Content */}
       <div className="space-y-6">
         {/* Stats Grid Cards */}

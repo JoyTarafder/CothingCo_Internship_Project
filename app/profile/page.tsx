@@ -32,7 +32,7 @@ export default function ProfilePage() {
     stats: [
       { label: "Orders", value: 248 },
       { label: "Products", value: 156 },
-      { label: "Revenue", value: "$24.8K" },
+      { label: "Revenue", value: "৳24.8K" },
     ],
     recentActivity: [
       { action: "Added new product", time: "2 hours ago" },
@@ -76,7 +76,7 @@ export default function ProfilePage() {
               <div className="flex items-center mt-4 text-gray-500 dark:text-gray-400">
                 <FiMapPin className="h-4 w-4 mr-1.5" />
                 <span className="text-sm">{user.location}</span>
-      </div>
+              </div>
 
               <div className="mt-5 grid grid-cols-3 gap-4 w-full text-center">
                 {user.stats.map((stat, index) => (
@@ -87,30 +87,30 @@ export default function ProfilePage() {
                   >
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
                       {stat.value}
-                  </span>
+                    </span>
                     <span className="text-xs text-gray-500 dark:text-gray-400">
                       {stat.label}
-                </span>
+                    </span>
                   </motion.div>
                 ))}
+              </div>
             </div>
-          </div>
 
             <div className="pt-5 border-t border-gray-200 dark:border-gray-700">
               <div className="space-y-3">
                 <div className="flex items-center text-gray-700 dark:text-gray-300">
                   <FiMail className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400" />
                   <span className="text-sm">{user.email}</span>
-            </div>
+                </div>
                 <div className="flex items-center text-gray-700 dark:text-gray-300">
                   <FiPhone className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400" />
                   <span className="text-sm">{user.phone}</span>
-            </div>
+                </div>
                 <div className="flex items-center text-gray-700 dark:text-gray-300">
                   <FiCalendar className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400" />
                   <span className="text-sm">Joined {user.joinDate}</span>
-          </div>
-        </div>
+                </div>
+              </div>
 
               <div className="mt-6 flex justify-between space-x-2">
                 <Link href="/settings" className="flex-1">
@@ -164,7 +164,7 @@ export default function ProfilePage() {
                   {tab.label}
                 </motion.button>
               ))}
-          </div>
+            </div>
 
             <div className="p-6">
               {/* Overview Tab Content */}
@@ -176,7 +176,7 @@ export default function ProfilePage() {
                 >
                   <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">
                     Profile Overview
-              </h2>
+                  </h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div>
@@ -196,9 +196,9 @@ export default function ProfilePage() {
                             </h4>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
                               Full access to all functionality
-                    </p>
-                  </div>
-                </div>
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -217,20 +217,20 @@ export default function ProfilePage() {
                           >
                             <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
                               <FiUser className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                  </div>
+                            </div>
                             <div>
                               <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                 {activity.action}
                               </p>
                               <p className="text-xs text-gray-500 dark:text-gray-400">
                                 {activity.time}
-                    </p>
-                  </div>
+                              </p>
+                            </div>
                           </motion.div>
                         ))}
-                </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
                   <div className="mt-6">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
@@ -341,15 +341,15 @@ export default function ProfilePage() {
                                       : i % 4 === 2
                                       ? "Order was processed successfully and shipped to the customer."
                                       : "Updated email notification settings and security preferences."}
-                    </p>
-                  </div>
+                                  </p>
+                                </div>
                               </motion.div>
                             ))}
-                </div>
-              </div>
+                          </div>
+                        </div>
                       )
                     )}
-            </div>
+                  </div>
                 </motion.div>
               )}
 
@@ -363,7 +363,7 @@ export default function ProfilePage() {
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-gray-800 dark:text-white">
                       Security Settings
-              </h2>
+                    </h2>
                     <Link href="/settings?tab=security">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -429,10 +429,10 @@ export default function ProfilePage() {
                                 <h4 className="text-base font-medium text-gray-800 dark:text-white">
                                   {item.title}
                                 </h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                   {item.description}
-                    </p>
-                  </div>
+                                </p>
+                              </div>
                               <span
                                 className={`px-3 py-1 rounded-full text-sm font-medium ${item.statusColor}`}
                               >
@@ -440,7 +440,7 @@ export default function ProfilePage() {
                               </span>
                             </motion.div>
                           ))}
-                </div>
+                        </div>
                       </div>
                     </div>
 
@@ -494,21 +494,21 @@ export default function ProfilePage() {
                                   </div>
                                   <p className="text-xs text-gray-500 dark:text-gray-400">
                                     {login.location} • {login.time}
-                      </p>
+                                  </p>
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                            </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
                 </motion.div>
               )}
             </div>
           </div>
         </motion.div>
-        </div>
+      </div>
     </DashboardLayout>
   );
 }

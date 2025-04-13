@@ -3,12 +3,25 @@
 import DashboardCard from "@/components/DashboardCard";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
-import {
-  FiActivity,
-  FiDollarSign,
-  FiShoppingBag,
-  FiUsers,
-} from "react-icons/fi";
+import { FiActivity, FiShoppingBag, FiUsers } from "react-icons/fi";
+
+// Custom Taka Icon component
+const TakaIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M17 6h-7.5c-1.93 0-3.5 1.57-3.5 3.5 0 1.93 1.57 3.5 3.5 3.5h3.5" />
+    <path d="M7 14v4" />
+    <path d="M11 10l-4 4" />
+  </svg>
+);
 
 type Stat = {
   title: string;
@@ -25,8 +38,8 @@ export default function DashboardStatsGrid() {
   const stats: Stat[] = [
     {
       title: "Total Revenue",
-      value: "$48,258.42",
-      icon: <FiDollarSign className="h-6 w-6 text-white" />,
+      value: "৳48,258.42",
+      icon: <TakaIcon className="h-6 w-6 text-white" />,
       iconColor: "bg-blue-500",
       trend: {
         value: 12.5,

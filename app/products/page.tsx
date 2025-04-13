@@ -279,7 +279,7 @@ export default function ProductsPage() {
                           {product.name}
                         </h3>
                         <span className="text-primary dark:text-primary-dark font-bold">
-                          ${product.price.toFixed(2)}
+                          ৳{product.price.toFixed(2)}
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
@@ -373,7 +373,7 @@ export default function ProductsPage() {
                           {product.category}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                          ${product.price.toFixed(2)}
+                          ৳{product.price.toFixed(2)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span

@@ -1,3 +1,4 @@
+import { CategoriesProvider } from "@/context/CategoriesContext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -56,7 +57,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={getInitialProps()} />
       </head>
       <body className={inter.className} suppressHydrationWarning>
-        {children}
+        <CategoriesProvider>{children}</CategoriesProvider>
       </body>
     </html>
   );

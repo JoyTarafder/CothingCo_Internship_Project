@@ -2,6 +2,7 @@
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import { useCategories } from "@/context/CategoriesContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
@@ -16,38 +17,9 @@ import {
   FiX,
 } from "react-icons/fi";
 
-type Category = {
-  id: string;
-  name: string;
-  subCategories: number;
-  products: number;
-  variants: number;
-};
-
 export default function InventoryPage() {
-  const [categories, setCategories] = useState<Category[]>([
-    {
-      id: "1",
-      name: "Men",
-      subCategories: 2,
-      products: 4,
-      variants: 6,
-    },
-    {
-      id: "2",
-      name: "Women",
-      subCategories: 1,
-      products: 2,
-      variants: 4,
-    },
-    {
-      id: "3",
-      name: "Kids",
-      subCategories: 0,
-      products: 0,
-      variants: 0,
-    },
-  ]);
+  // Use categories from context
+  const { categories, deleteCategory } = useCategories();
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -63,56 +35,23 @@ export default function InventoryPage() {
     }
   }, [feedback]);
 
-  const handleDeleteCategory = (index: number) => {
-    const deletedCategory = categories[index];
-    const newCategories = [...categories];
-    newCategories.splice(index, 1);
-    setCategories(newCategories);
-    setFeedback({
-      message: `${deletedCategory.name} category deleted successfully`,
-      type: "success",
-    });
-  };
-
-  const handleAddCategory = () => {
-    if (newCategoryName.trim() === "") {
+  const handleDeleteCategory = (categoryId: string) => {
+    try {
+      const categoryToDelete = categories.find((cat) => cat.id === categoryId);
+      deleteCategory(categoryId);
+      if (categoryToDelete) {
+        setFeedback({
+          message: `${categoryToDelete.name} category deleted successfully`,
+          type: "success",
+        });
+      }
+    } catch (error) {
       setFeedback({
-        message: "Category name cannot be empty",
+        message: "Failed to delete category",
         type: "error",
       });
-      return;
+      console.error("Error deleting category:", error);
     }
-
-    // Check if category already exists
-    if (
-      categories.some(
-        (cat) => cat.name.toLowerCase() === newCategoryName.toLowerCase()
-      )
-    ) {
-      setFeedback({
-        message: "Category already exists",
-        type: "error",
-      });
-      return;
-    }
-
-    setCategories([
-      ...categories,
-      {
-        id: Date.now().toString(),
-        name: newCategoryName,
-        subCategories: 0,
-        products: 0,
-        variants: 0,
-      },
-    ]);
-
-    setFeedback({
-      message: "Category added successfully",
-      type: "success",
-    });
-    setNewCategoryName("");
-    setShowAddModal(false);
   };
 
   // Animation variants for list items
@@ -179,12 +118,12 @@ export default function InventoryPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowAddModal(true)}
+              onClick={() => (window.location.href = "/categories")}
               className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-all duration-300 ease-in-out"
-              aria-label="Add new category"
+              aria-label="Manage categories"
             >
-              <FiPlus className="h-5 w-5 mr-2" />
-              Add Category
+              <FiTag className="h-5 w-5 mr-2" />
+              Manage Categories
             </motion.button>
           </div>
 
@@ -195,7 +134,7 @@ export default function InventoryPage() {
             animate="show"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
           >
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <motion.div
                 key={category.id}
                 variants={item}
@@ -215,7 +154,7 @@ export default function InventoryPage() {
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      onClick={() => handleDeleteCategory(index)}
+                      onClick={() => handleDeleteCategory(category.id)}
                       className="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
                       aria-label={`Delete ${category.name} category`}
                     >
@@ -380,7 +319,7 @@ export default function InventoryPage() {
                       <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
-                        onClick={handleAddCategory}
+                        onClick={() => setShowAddModal(false)}
                         className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-colors flex items-center"
                       >
                         <FiPlus className="h-4 w-4 mr-1" />

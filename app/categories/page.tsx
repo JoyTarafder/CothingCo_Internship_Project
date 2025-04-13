@@ -4,6 +4,7 @@ import AddCategoryModal from "@/components/AddCategoryModal";
 import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import { Category, useCategories } from "@/context/CategoriesContext";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
@@ -15,16 +16,10 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 
-// Category type definition
-interface Category {
-  id: string;
-  name: string;
-  subCategories: number;
-  products: number;
-  variants: number;
-}
-
 export default function CategoryManagement() {
+  // Use the categories context instead of local state
+  const { categories, addCategory, deleteCategory } = useCategories();
+
   // State for modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -34,31 +29,6 @@ export default function CategoryManagement() {
 
   // State for feedback message
   const [feedback, setFeedback] = useState({ message: "", type: "" });
-
-  // Initial categories data based on the reference image
-  const [categories, setCategories] = useState<Category[]>([
-    {
-      id: "1",
-      name: "Men",
-      subCategories: 2,
-      products: 4,
-      variants: 6,
-    },
-    {
-      id: "2",
-      name: "Women",
-      subCategories: 1,
-      products: 2,
-      variants: 4,
-    },
-    {
-      id: "3",
-      name: "Kids",
-      subCategories: 0,
-      products: 0,
-      variants: 0,
-    },
-  ]);
 
   // Clear feedback after 3 seconds
   useEffect(() => {
@@ -77,12 +47,10 @@ export default function CategoryManagement() {
   };
 
   // Function to delete a category
-  const deleteCategory = () => {
+  const handleDeleteCategory = () => {
     try {
       if (categoryToDelete) {
-        setCategories(
-          categories.filter((category) => category.id !== categoryToDelete.id)
-        );
+        deleteCategory(categoryToDelete.id);
         setFeedback({
           message: `${categoryToDelete.name} category deleted successfully`,
           type: "success",
@@ -93,34 +61,21 @@ export default function CategoryManagement() {
       console.error("Error deleting category:", error);
     }
     setCategoryToDelete(null);
+    setIsDeleteModalOpen(false);
   };
 
   // Function to add a new category
-  const addCategory = (categoryName: string) => {
+  const handleAddCategory = (categoryName: string) => {
     try {
-      // Check if category already exists
-      if (
-        categories.some(
-          (category) =>
-            category.name.toLowerCase() === categoryName.toLowerCase()
-        )
-      ) {
-        setFeedback({ message: "Category already exists", type: "error" });
-        return;
-      }
-
-      const newCategory: Category = {
-        id: Date.now().toString(), // Simple unique ID generation
-        name: categoryName,
-        subCategories: 0,
-        products: 0,
-        variants: 0,
-      };
-
-      setCategories([...categories, newCategory]);
+      // Add the category using the context function
+      addCategory(categoryName);
       setFeedback({ message: "Category added successfully", type: "success" });
     } catch (error) {
-      setFeedback({ message: "Failed to add category", type: "error" });
+      if (error instanceof Error) {
+        setFeedback({ message: error.message, type: "error" });
+      } else {
+        setFeedback({ message: "Failed to add category", type: "error" });
+      }
       console.error("Error adding category:", error);
     }
   };
@@ -280,14 +235,14 @@ export default function CategoryManagement() {
           <AddCategoryModal
             isOpen={isAddModalOpen}
             onClose={() => setIsAddModalOpen(false)}
-            onAdd={addCategory}
+            onAdd={handleAddCategory}
           />
 
           {/* Delete Confirmation Modal */}
           <DeleteConfirmationModal
             isOpen={isDeleteModalOpen}
             onClose={() => setIsDeleteModalOpen(false)}
-            onConfirm={deleteCategory}
+            onConfirm={handleDeleteCategory}
             itemName={categoryToDelete?.name || ""}
           />
         </main>

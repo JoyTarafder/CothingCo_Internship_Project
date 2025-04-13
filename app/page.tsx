@@ -66,6 +66,7 @@ export default function Dashboard() {
           "rgba(251, 191, 36, 0.5)",
           "rgba(239, 68, 68, 0.5)",
         ],
+        borderWidth: 0,
       },
     ],
   });
@@ -108,6 +109,7 @@ export default function Dashboard() {
     labels: ["Delivered", "Processing", "Pending", "Canceled"],
     datasets: [
       {
+        label: "Order Status",
         data: [0, 0, 0, 0],
         backgroundColor: [
           "rgba(16, 185, 129, 0.7)",
@@ -236,6 +238,7 @@ export default function Dashboard() {
         labels: ["Delivered", "Processing", "Pending", "Canceled"],
         datasets: [
           {
+            label: "Order Status",
             data: [65, 20, 10, 5],
             backgroundColor: [
               "rgba(16, 185, 129, 0.7)",

@@ -1,5 +1,6 @@
 "use client";
 
+import AddProductModal from "@/components/AddProductModal";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { useState } from "react";
@@ -28,6 +29,7 @@ type Product = {
 export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
 
   // Sample data
   const [products, setProducts] = useState<Product[]>([
@@ -124,6 +126,22 @@ export default function ProductsPage() {
     return stars;
   };
 
+  const handleAddProduct = (productData: any) => {
+    // Create a new product with the form data
+    const newProduct = {
+      id: `PRD-${Math.floor(Math.random() * 1000)}`,
+      name: productData.title,
+      category: productData.materials,
+      price: parseFloat(productData.retailPrice) || 0,
+      stock: parseInt(productData.quantity) || 0,
+      rating: 4.0,
+      image:
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    };
+
+    setProducts([...products, newProduct]);
+  };
+
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
@@ -138,6 +156,13 @@ export default function ProductsPage() {
               Manage your product inventory and listings
             </p>
           </div>
+
+          {/* Add Product Modal */}
+          <AddProductModal
+            isOpen={isAddProductModalOpen}
+            onClose={() => setIsAddProductModalOpen(false)}
+            onAdd={handleAddProduct}
+          />
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden mb-8">
             <div className="p-5 border-b border-gray-100 dark:border-gray-700">
@@ -196,7 +221,10 @@ export default function ProductsPage() {
                     <option value="Accessories">Accessories</option>
                   </select>
 
-                  <button className="admin-button flex items-center bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary-dark transition-all">
+                  <button
+                    onClick={() => setIsAddProductModalOpen(true)}
+                    className="admin-button flex items-center bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary-dark transition-all"
+                  >
                     <FiPlus className="mr-2" />
                     Add Product
                   </button>

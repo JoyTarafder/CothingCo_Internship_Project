@@ -22,6 +22,8 @@ interface CategoriesContextType {
   addCategory: (categoryName: string) => void;
   deleteCategory: (categoryId: string) => void;
   getCategoryById: (categoryId: string) => Category | undefined;
+  addSubCategory: (categoryId: string) => void;
+  updateCategory: (categoryId: string, newName: string) => void;
 }
 
 const CategoriesContext = createContext<CategoriesContextType | undefined>(
@@ -34,23 +36,23 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
     {
       id: "1",
       name: "Men",
-      subCategories: 2,
-      products: 4,
-      variants: 6,
+      subCategories: 3,
+      products: 12,
+      variants: 24,
     },
     {
       id: "2",
       name: "Women",
-      subCategories: 1,
-      products: 2,
-      variants: 4,
+      subCategories: 5,
+      products: 18,
+      variants: 32,
     },
     {
       id: "3",
       name: "Kids",
-      subCategories: 0,
-      products: 0,
-      variants: 0,
+      subCategories: 2,
+      products: 8,
+      variants: 15,
     },
   ]);
 
@@ -87,12 +89,17 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
       throw new Error("Category already exists");
     }
 
+    // Generate random statistics for the new category
+    const randomSubcategories = Math.floor(Math.random() * 5);
+    const randomProducts = Math.floor(Math.random() * 10) + 1;
+    const randomVariants = Math.floor(Math.random() * 20) + randomProducts;
+
     const newCategory: Category = {
       id: Date.now().toString(), // Simple unique ID generation
       name: categoryName,
-      subCategories: 0,
-      products: 0,
-      variants: 0,
+      subCategories: randomSubcategories,
+      products: randomProducts,
+      variants: randomVariants,
     };
 
     setCategories((prevCategories) => [...prevCategories, newCategory]);
@@ -110,6 +117,47 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
     return categories.find((category) => category.id === categoryId);
   };
 
+  // Add subcategory to a category (increments the count)
+  const addSubCategory = (categoryId: string) => {
+    setCategories((prevCategories) =>
+      prevCategories.map((category) => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            subCategories: category.subCategories + 1,
+          };
+        }
+        return category;
+      })
+    );
+  };
+
+  // Update a category
+  const updateCategory = (categoryId: string, newName: string) => {
+    // Check if another category already exists with this name
+    if (
+      categories.some(
+        (cat) =>
+          cat.id !== categoryId &&
+          cat.name.toLowerCase() === newName.toLowerCase()
+      )
+    ) {
+      throw new Error("Category name already exists");
+    }
+
+    setCategories((prevCategories) =>
+      prevCategories.map((category) => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            name: newName,
+          };
+        }
+        return category;
+      })
+    );
+  };
+
   return (
     <CategoriesContext.Provider
       value={{
@@ -117,6 +165,8 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
         addCategory,
         deleteCategory,
         getCategoryById,
+        addSubCategory,
+        updateCategory,
       }}
     >
       {children}

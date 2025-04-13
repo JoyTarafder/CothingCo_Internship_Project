@@ -2,10 +2,12 @@
 
 import AddCategoryModal from "@/components/AddCategoryModal";
 import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
+import EditCategoryModal from "@/components/EditCategoryModal";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Category, useCategories } from "@/context/CategoriesContext";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   FiBox,
@@ -17,15 +19,21 @@ import {
 } from "react-icons/fi";
 
 export default function CategoryManagement() {
+  // Add router for navigation
+  const router = useRouter();
+
   // Use the categories context instead of local state
-  const { categories, addCategory, deleteCategory } = useCategories();
+  const { categories, addCategory, deleteCategory, updateCategory } =
+    useCategories();
 
   // State for modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
     null
   );
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
   // State for feedback message
   const [feedback, setFeedback] = useState({ message: "", type: "" });
@@ -40,8 +48,15 @@ export default function CategoryManagement() {
     }
   }, [feedback]);
 
+  // Function to navigate to category detail page
+  const navigateToCategoryPage = (categoryId: string, categoryName: string) => {
+    router.push(`/categories/${categoryId}`);
+  };
+
   // Function to initiate deletion confirmation
-  const confirmDeleteCategory = (category: Category) => {
+  const confirmDeleteCategory = (category: Category, e: React.MouseEvent) => {
+    // Stop event propagation to prevent navigation when clicking delete button
+    e.stopPropagation();
     setCategoryToDelete(category);
     setIsDeleteModalOpen(true);
   };
@@ -77,6 +92,32 @@ export default function CategoryManagement() {
         setFeedback({ message: "Failed to add category", type: "error" });
       }
       console.error("Error adding category:", error);
+    }
+  };
+
+  // Function to initiate category edit
+  const initiateEditCategory = (category: Category, e: React.MouseEvent) => {
+    // Stop event propagation to prevent navigation when clicking edit button
+    e.stopPropagation();
+    setCategoryToEdit(category);
+    setIsEditModalOpen(true);
+  };
+
+  // Function to update a category
+  const handleUpdateCategory = (categoryId: string, newName: string) => {
+    try {
+      updateCategory(categoryId, newName);
+      setFeedback({
+        message: `Category updated successfully`,
+        type: "success",
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        setFeedback({ message: error.message, type: "error" });
+      } else {
+        setFeedback({ message: "Failed to update category", type: "error" });
+      }
+      console.error("Error updating category:", error);
     }
   };
 
@@ -162,12 +203,15 @@ export default function CategoryManagement() {
               <motion.div
                 key={category.id}
                 variants={item}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700"
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
                 whileHover={{
                   y: -5,
                   boxShadow:
                     "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
                 }}
+                onClick={() =>
+                  navigateToCategoryPage(category.id, category.name)
+                }
               >
                 <div className="border-b border-gray-100 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-700">
                   <div className="flex justify-between items-center">
@@ -181,13 +225,14 @@ export default function CategoryManagement() {
                         whileTap={{ scale: 0.9 }}
                         className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors p-2 rounded-full hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
                         aria-label={`Edit ${category.name} category`}
+                        onClick={(e) => initiateEditCategory(category, e)}
                       >
                         <FiEdit2 className="h-4 w-4" />
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        onClick={() => confirmDeleteCategory(category)}
+                        onClick={(e) => confirmDeleteCategory(category, e)}
                         className="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
                         aria-label={`Delete ${category.name} category`}
                       >
@@ -244,6 +289,14 @@ export default function CategoryManagement() {
             onClose={() => setIsDeleteModalOpen(false)}
             onConfirm={handleDeleteCategory}
             itemName={categoryToDelete?.name || ""}
+          />
+
+          {/* Edit Category Modal */}
+          <EditCategoryModal
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            onUpdate={handleUpdateCategory}
+            category={categoryToEdit}
           />
         </main>
       </div>

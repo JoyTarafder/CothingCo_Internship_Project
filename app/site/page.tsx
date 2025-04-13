@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import React, { useState } from "react";
 import {
+  FiBell,
   FiGlobe,
   FiImage,
   FiPlus,
@@ -15,7 +16,7 @@ import {
 } from "react-icons/fi";
 
 // Tab type
-type TabType = "banners" | "general" | "seo" | "social";
+type TabType = "banners" | "general" | "seo" | "social" | "notifications";
 
 // Banner interface
 interface Banner {
@@ -25,11 +26,29 @@ interface Banner {
   status: boolean;
 }
 
+// Notification interface
+interface Notification {
+  id: number;
+  title: string;
+  message: string;
+  type: "info" | "success" | "warning" | "error";
+  status: boolean;
+  startDate: string;
+  endDate: string;
+}
+
 // Banner Modal Props
 interface BannerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (title: string, image: string) => void;
+}
+
+// Notification Modal Props
+interface NotificationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onAdd: (notification: Omit<Notification, "id">) => void;
 }
 
 // Banner Add Modal Component
@@ -173,12 +192,172 @@ const AddBannerModal: React.FC<BannerModalProps> = ({
   );
 };
 
+// Notification Add Modal Component
+const AddNotificationModal: React.FC<NotificationModalProps> = ({
+  isOpen,
+  onClose,
+  onAdd,
+}) => {
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState<Notification["type"]>("info");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (title && message && startDate && endDate) {
+      onAdd({
+        title,
+        message,
+        type,
+        status: true,
+        startDate,
+        endDate,
+      });
+      setTitle("");
+      setMessage("");
+      setType("info");
+      setStartDate("");
+      setEndDate("");
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-lg">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
+            Add New Notification
+          </h3>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            <FiX className="w-5 h-5" />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Notification Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Enter notification title"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="message"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Message
+            </label>
+            <textarea
+              id="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Enter notification message"
+              required
+            ></textarea>
+          </div>
+          <div>
+            <label
+              htmlFor="type"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Notification Type
+            </label>
+            <select
+              id="type"
+              value={type}
+              onChange={(e) => setType(e.target.value as Notification["type"])}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+              required
+            >
+              <option value="info">Information</option>
+              <option value="success">Success</option>
+              <option value="warning">Warning</option>
+              <option value="error">Error</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="startDate"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                Start Date
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="endDate"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                End Date
+              </label>
+              <input
+                type="date"
+                id="endDate"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+                required
+              />
+            </div>
+          </div>
+          <div className="flex justify-end pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="mr-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none"
+            >
+              Add Notification
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default function SiteManagementPage() {
   // Active tab state
   const [activeTab, setActiveTab] = useState<TabType>("banners");
 
-  // Modal state
+  // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAddNotificationModalOpen, setIsAddNotificationModalOpen] =
+    useState(false);
 
   // Sample banners data
   const [banners, setBanners] = useState<Banner[]>([
@@ -202,6 +381,37 @@ export default function SiteManagementPage() {
     },
   ]);
 
+  // Sample notifications data
+  const [notifications, setNotifications] = useState<Notification[]>([
+    {
+      id: 1,
+      title: "Welcome to our store",
+      message: "Thank you for visiting our online store. Enjoy shopping!",
+      type: "info",
+      status: true,
+      startDate: "2025-04-01",
+      endDate: "2025-04-30",
+    },
+    {
+      id: 2,
+      title: "Special Discount",
+      message: "Get 20% off on all products for a limited time!",
+      type: "success",
+      status: true,
+      startDate: "2025-04-15",
+      endDate: "2025-05-15",
+    },
+    {
+      id: 3,
+      title: "Holiday Notice",
+      message: "Our store will be closed on April 30th for maintenance.",
+      type: "warning",
+      status: false,
+      startDate: "2025-04-25",
+      endDate: "2025-04-30",
+    },
+  ]);
+
   // Handle status toggle
   const toggleStatus = (id: number) => {
     setBanners(
@@ -211,9 +421,27 @@ export default function SiteManagementPage() {
     );
   };
 
+  // Handle toggle notification status
+  const toggleNotificationStatus = (id: number) => {
+    setNotifications(
+      notifications.map((notification) =>
+        notification.id === id
+          ? { ...notification, status: !notification.status }
+          : notification
+      )
+    );
+  };
+
   // Handle delete banner
   const deleteBanner = (id: number) => {
     setBanners(banners.filter((banner) => banner.id !== id));
+  };
+
+  // Handle delete notification
+  const deleteNotification = (id: number) => {
+    setNotifications(
+      notifications.filter((notification) => notification.id !== id)
+    );
   };
 
   // Handle add banner
@@ -227,13 +455,39 @@ export default function SiteManagementPage() {
     setBanners([...banners, newBanner]);
   };
 
+  // Handle add notification
+  const addNotification = (notification: Omit<Notification, "id">) => {
+    const newNotification: Notification = {
+      id: Math.floor(Math.random() * 1000), // Generate random ID
+      ...notification,
+    };
+    setNotifications([...notifications, newNotification]);
+  };
+
   // Tab configurations
   const tabs = [
     { id: "banners", label: "Banners", icon: FiImage },
     { id: "general", label: "General Settings", icon: FiSettings },
     { id: "seo", label: "SEO Settings", icon: FiGlobe },
     { id: "social", label: "Social Media", icon: FiShare2 },
+    { id: "notifications", label: "Notifications", icon: FiBell },
   ];
+
+  // Helper function to get notification type style
+  const getNotificationTypeStyle = (type: Notification["type"]) => {
+    switch (type) {
+      case "info":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+      case "success":
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+      case "warning":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+      case "error":
+        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400";
+    }
+  };
 
   // Render content based on active tab
   const renderTabContent = () => {
@@ -1046,7 +1300,7 @@ export default function SiteManagementPage() {
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
-                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.265.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
                         </svg>
                       </div>
                       <div className="ml-3">
@@ -1219,6 +1473,238 @@ export default function SiteManagementPage() {
             </div>
           </div>
         );
+      case "notifications":
+        return (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden animate-fadeIn">
+            {/* Notification Stats Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 border-b border-gray-100 dark:border-gray-700">
+              <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 flex items-center space-x-4">
+                <div className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-sm">
+                  <FiBell className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Total Notifications
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {notifications.length}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 flex items-center space-x-4">
+                <div className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-sm">
+                  <svg
+                    className="h-6 w-6 text-green-600 dark:text-green-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Active Notifications
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {
+                      notifications.filter(
+                        (notification) => notification.status
+                      ).length
+                    }
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 flex items-center space-x-4 cursor-pointer hover:shadow-md transition-shadow duration-300"
+                onClick={() => setIsAddNotificationModalOpen(true)}
+              >
+                <div className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-sm">
+                  <FiPlusCircle className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Add New
+                  </p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                    Create Notification
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Notifications Table */}
+            <div className="overflow-x-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center">
+                    <FiBell className="mr-2 h-5 w-5 text-purple-600 dark:text-purple-400" />
+                    All Notifications
+                  </h2>
+
+                  <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span>Total: {notifications.length}</span>
+                    <span className="mx-2">•</span>
+                    <button
+                      onClick={() => setIsAddNotificationModalOpen(true)}
+                      className="flex items-center text-purple-600 hover:text-purple-700 transition-colors"
+                    >
+                      <FiPlus className="mr-1 h-4 w-4" />
+                      Add New
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6">
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    About Popup Notifications
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Popup notifications appear to users when they visit your
+                    site. They can be used for announcements, promotions, or
+                    important information. Set the date range to control when
+                    notifications are shown to users.
+                  </p>
+                </div>
+
+                <table className="w-full min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-gray-700">
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      >
+                        Title
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      >
+                        Message
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      >
+                        Type
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      >
+                        Date Range
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      >
+                        Status
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {notifications.length > 0 ? (
+                      notifications.map((notification) => (
+                        <tr
+                          key={notification.id}
+                          className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <td className="px-6 py-4">
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                              {notification.title}
+                            </div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              ID: {notification.id}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
+                              {notification.message}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span
+                              className={`px-2.5 py-1 rounded-full text-xs font-medium ${getNotificationTypeStyle(
+                                notification.type
+                              )}`}
+                            >
+                              {notification.type.charAt(0).toUpperCase() +
+                                notification.type.slice(1)}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {new Date(
+                                notification.startDate
+                              ).toLocaleDateString()}{" "}
+                              -{" "}
+                              {new Date(
+                                notification.endDate
+                              ).toLocaleDateString()}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <button
+                              onClick={() =>
+                                toggleNotificationStatus(notification.id)
+                              }
+                              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                notification.status
+                                  ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50"
+                                  : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"
+                              }`}
+                            >
+                              <span
+                                className={`w-2 h-2 rounded-full mr-2 ${
+                                  notification.status
+                                    ? "bg-green-600 dark:bg-green-500"
+                                    : "bg-gray-600 dark:bg-gray-400"
+                                }`}
+                              ></span>
+                              {notification.status ? "Active" : "Inactive"}
+                            </button>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button
+                              onClick={() =>
+                                deleteNotification(notification.id)
+                              }
+                              className="p-1.5 rounded-lg transition-colors text-red-600 hover:text-red-900 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
+                            >
+                              <FiTrash className="h-4 w-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={6}
+                          className="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400"
+                        >
+                          No notifications found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
       default:
         return null;
     }
@@ -1255,7 +1741,7 @@ export default function SiteManagementPage() {
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-5">
             {tabs.map((tab) => (
               <div
                 key={tab.id}
@@ -1314,6 +1800,13 @@ export default function SiteManagementPage() {
             onClose={() => setIsAddModalOpen(false)}
             onAdd={addBanner}
           />
+
+          {/* Add Notification Modal */}
+          <AddNotificationModal
+            isOpen={isAddNotificationModalOpen}
+            onClose={() => setIsAddNotificationModalOpen(false)}
+            onAdd={addNotification}
+          />
         </main>
       </div>
     </div>
@@ -1331,6 +1824,8 @@ function getTabGradient(tabId: string): string {
       return "from-purple-50 to-transparent dark:from-purple-900/10";
     case "social":
       return "from-amber-50 to-transparent dark:from-amber-900/10";
+    case "notifications":
+      return "from-purple-50 to-transparent dark:from-purple-900/10";
     default:
       return "from-gray-50 to-transparent dark:from-gray-900/10";
   }
@@ -1346,6 +1841,8 @@ function getTabBgColor(tabId: string): string {
       return "bg-purple-100 dark:bg-purple-900/30";
     case "social":
       return "bg-amber-100 dark:bg-amber-900/30";
+    case "notifications":
+      return "bg-purple-100 dark:bg-purple-900/30";
     default:
       return "bg-gray-100 dark:bg-gray-800/30";
   }
@@ -1361,6 +1858,8 @@ function getTabIconColor(tabId: string): string {
       return "text-purple-600 dark:text-purple-400";
     case "social":
       return "text-amber-600 dark:text-amber-400";
+    case "notifications":
+      return "text-purple-600 dark:text-purple-400";
     default:
       return "text-gray-600 dark:text-gray-400";
   }
@@ -1376,6 +1875,8 @@ function getTabHoverColor(tabId: string): string {
       return "text-purple-700 dark:text-purple-400";
     case "social":
       return "text-amber-700 dark:text-amber-400";
+    case "notifications":
+      return "text-purple-700 dark:text-purple-400";
     default:
       return "text-gray-700 dark:text-gray-400";
   }
@@ -1391,6 +1892,8 @@ function getTabDescription(tabId: string): string {
       return "Optimize search engine visibility";
     case "social":
       return "Connect social media accounts";
+    case "notifications":
+      return "Configure notification settings";
     default:
       return "";
   }

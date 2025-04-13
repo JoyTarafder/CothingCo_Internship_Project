@@ -157,7 +157,9 @@ export default function Sidebar() {
                     />
                   </div>
                   <span
-                    className={`font-medium text-sm ${isActive ? "font-medium" : ""}`}
+                    className={`font-medium text-sm ${
+                      isActive ? "font-medium" : ""
+                    }`}
                   >
                     {item.name}
                   </span>

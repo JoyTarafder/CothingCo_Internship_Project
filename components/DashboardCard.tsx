@@ -18,7 +18,7 @@ export default function DashboardCard({
   title,
   value,
   icon,
-  iconColor = "bg-blue-500",
+  iconColor = "bg-primary",
   trend,
 }: DashboardCardProps) {
   return (
@@ -28,19 +28,20 @@ export default function DashboardCard({
       transition={{ duration: 0.4 }}
       whileHover={{
         scale: 1.03,
-        boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1)",
         y: -5,
+        boxShadow: "0 20px 30px rgba(0, 0, 0, 0.12)",
         transition: { duration: 0.2 },
       }}
-      className="relative overflow-hidden bg-gradient-to-br from-white/90 to-white/60 dark:from-gray-800/90 dark:to-gray-900/80 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/30 p-6 transition-all duration-300 backdrop-blur-md"
+      className="relative overflow-hidden rounded-2xl shadow-card hover:shadow-card-hover border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 transition-all duration-300 backdrop-blur-md"
     >
-      <div className="flex justify-between items-start">
-        <div className="z-10">
+      {/* Card content */}
+      <div className="flex justify-between items-start relative z-10">
+        <div>
           <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 tracking-wide">
             {title}
           </p>
           <div className="flex items-center">
-            <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 tracking-tight">
               {value}
             </h3>
             {trend && (
@@ -48,10 +49,10 @@ export default function DashboardCard({
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.2 }}
-                className={`ml-3 text-sm font-bold flex items-center rounded-full px-2 py-0.5 ${
+                className={`ml-3 text-sm font-medium flex items-center rounded-full px-2.5 py-1 ${
                   trend.isPositive
-                    ? "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30"
-                    : "text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30"
+                    ? "text-success-dark dark:text-success-light bg-success-light/20 dark:bg-success-dark/20"
+                    : "text-danger-dark dark:text-danger-light bg-danger-light/20 dark:bg-danger-dark/20"
                 }`}
               >
                 <motion.span
@@ -76,13 +77,16 @@ export default function DashboardCard({
           </div>
         </div>
         <motion.div
-          whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+          whileHover={{ rotate: [0, -5, 5, 0], scale: 1.1 }}
           transition={{ duration: 0.5 }}
           className={`${iconColor} rounded-xl p-3.5 shadow-lg z-10 transform`}
         >
           {icon}
         </motion.div>
       </div>
+
+      {/* Glass effect background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-white/20 dark:from-gray-800/20 dark:to-gray-900/10 backdrop-blur-sm z-0"></div>
 
       {/* Decorative elements */}
       <motion.div
@@ -95,7 +99,10 @@ export default function DashboardCard({
           duration: 5,
           ease: "easeInOut",
         }}
-        className={`absolute -right-10 -bottom-10 w-40 h-40 rounded-full ${iconColor} blur-2xl`}
+        className={`absolute -right-12 -bottom-12 w-44 h-44 rounded-full ${iconColor.replace(
+          "bg-",
+          "bg-opacity-20 bg-"
+        )} blur-2xl z-0`}
       ></motion.div>
 
       <motion.div
@@ -109,17 +116,34 @@ export default function DashboardCard({
           ease: "easeInOut",
           delay: 1,
         }}
-        className={`absolute -left-5 -top-5 w-20 h-20 rounded-full ${iconColor} blur-xl`}
+        className={`absolute -left-6 -top-6 w-24 h-24 rounded-full ${iconColor.replace(
+          "bg-",
+          "bg-opacity-15 bg-"
+        )} blur-xl z-0`}
       ></motion.div>
 
+      {/* Shimmer effect */}
+      <motion.div
+        initial={{ x: "-100%" }}
+        animate={{ x: "200%" }}
+        transition={{
+          repeat: Infinity,
+          duration: 2.5,
+          ease: "linear",
+          repeatDelay: 5,
+        }}
+        className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 dark:via-white/5 to-transparent z-0"
+      />
+
+      {/* Bottom accent line */}
       <motion.div
         initial={{ width: 0 }}
         animate={{ width: "40%" }}
         transition={{ duration: 0.8, delay: 0.2 }}
         className={`absolute bottom-0 left-0 h-1 ${iconColor.replace(
           "bg-",
-          "bg-opacity-70 bg-"
-        )} rounded-r-full`}
+          "bg-opacity-90 bg-"
+        )} rounded-r-full z-10`}
       />
     </motion.div>
   );

@@ -364,19 +364,21 @@ export default function SiteManagementPage() {
     {
       id: 7,
       title: "Winter Collection",
-      image: "/banners/winter-collection.jpg",
+      image: "https://i.imgur.com/uKQqsuA.jpg",
       status: true,
     },
     {
       id: 4,
       title: "Sale 30% Off",
-      image: "/banners/sale-banner.jpg",
+      image:
+        "https://i.ibb.co.com/dsBZ0MfV/winter-collection-design-template-fe990eac161e0a26bc20be885059b39f-screen.jpg",
       status: true,
     },
     {
       id: 2,
       title: "Summer Special",
-      image: "/banners/summer-special.jpg",
+      image:
+        "https://i.ibb.co.com/dsBZ0MfV/winter-collection-design-template-fe990eac161e0a26bc20be885059b39f-screen.jpg",
       status: false,
     },
   ]);

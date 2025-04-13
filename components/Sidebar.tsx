@@ -1,7 +1,5 @@
 "use client";
 
-import ThemeToggle from "@/components/ThemeToggle";
-import { useTheme } from "@/context/ThemeContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -17,7 +15,6 @@ import {
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { theme } = useTheme();
 
   const navItems = [
     { name: "Dashboard", path: "/", icon: FiHome },
@@ -46,16 +43,6 @@ export default function Sidebar() {
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
               Admin Panel
             </h1>
-            <div className="flex items-center mt-1">
-              <div
-                className={`h-2 w-2 rounded-full ${
-                  theme === "dark" ? "bg-blue-400" : "bg-yellow-400"
-                }`}
-              ></div>
-              <span className="text-xs text-gray-400 ml-1.5">
-                {theme === "dark" ? "Dark Mode" : "Light Mode"}
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -90,10 +77,6 @@ export default function Sidebar() {
       </nav>
 
       <div className="absolute bottom-0 w-full px-4 py-6 border-t border-gray-700/50 bg-gray-900/30 backdrop-blur-sm">
-        <div className="flex items-center justify-between mb-4 px-4">
-          <span className="text-sm text-gray-400">Theme</span>
-          <ThemeToggle />
-        </div>
         <button className="flex items-center w-full px-4 py-3 text-gray-300 hover:bg-white/10 hover:text-white rounded-xl transition-all duration-300">
           <FiLogOut className="h-5 w-5 mr-3 text-red-400" />
           <span className="font-medium">Log Out</span>

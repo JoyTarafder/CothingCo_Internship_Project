@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/context/AuthContext";
 import { CategoriesProvider } from "@/context/CategoriesContext";
+import { NotificationProvider } from "@/context/NotificationContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -60,9 +61,11 @@ export default function RootLayout({
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider>
-          <AuthProvider>
-            <CategoriesProvider>{children}</CategoriesProvider>
-          </AuthProvider>
+          <NotificationProvider>
+            <AuthProvider>
+              <CategoriesProvider>{children}</CategoriesProvider>
+            </AuthProvider>
+          </NotificationProvider>
         </ThemeProvider>
       </body>
     </html>

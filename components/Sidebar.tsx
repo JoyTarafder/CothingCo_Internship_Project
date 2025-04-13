@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { useNotification } from "@/context/NotificationContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,6 +19,7 @@ import {
 export default function Sidebar() {
   const pathname = usePathname();
   const { logout, user } = useAuth();
+  const { showNotification } = useNotification();
 
   const navItems = [
     { name: "Dashboard", path: "/", icon: FiHome },
@@ -50,6 +52,29 @@ export default function Sidebar() {
         duration: 0.2,
       },
     }),
+  };
+
+  const handleLogout = () => {
+    // Show notification before logging out
+    if (user) {
+      showNotification(
+        "logout",
+        "Logged out successfully",
+        "Your session has been ended securely.",
+        user.name
+      );
+    } else {
+      showNotification(
+        "logout",
+        "Logged out successfully",
+        "Your session has been ended securely."
+      );
+    }
+
+    // Small delay to allow notification to appear before redirecting
+    setTimeout(() => {
+      logout();
+    }, 300);
   };
 
   return (
@@ -126,7 +151,7 @@ export default function Sidebar() {
 
       <div className="absolute bottom-0 w-full px-4 py-6 border-t border-indigo-800/50 bg-indigo-950/40 backdrop-blur-sm">
         <motion.button
-          onClick={logout}
+          onClick={handleLogout}
           whileTap={{ scale: 0.98 }}
           whileHover={{ x: 5 }}
           className="flex items-center w-full px-4 py-3 text-indigo-100 hover:bg-indigo-800/40 hover:text-white rounded-xl transition-all duration-300"

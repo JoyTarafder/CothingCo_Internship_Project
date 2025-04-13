@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useNotification } from "./NotificationContext";
 
 type User = {
   email: string;
@@ -42,6 +43,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const { showNotification } = useNotification();
 
   // Check for existing session on component mount
   useEffect(() => {
@@ -50,7 +52,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         try {
-          setUser(JSON.parse(storedUser));
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+          showNotification(
+            "login",
+            "Welcome back",
+            `Session restored. You've been automatically logged in.`,
+            parsedUser.name
+          );
         } catch (error) {
           console.error("Failed to parse stored user", error);
           localStorage.removeItem("user");
@@ -60,13 +69,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     checkAuth();
-  }, []);
+  }, [showNotification]);
 
   // Redirect based on authentication state
   useEffect(() => {
     if (!isLoading) {
       // If not logged in and not on login page, redirect to login
       if (!user && pathname !== "/login") {
+        showNotification(
+          "warning",
+          "Authentication required",
+          "Please log in to access this page."
+        );
         router.push("/login");
       }
 
@@ -75,7 +89,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         router.push("/");
       }
     }
-  }, [user, isLoading, pathname, router]);
+  }, [user, isLoading, pathname, router, showNotification]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -98,6 +112,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // Store user in local storage
         localStorage.setItem("user", JSON.stringify(userData));
         setUser(userData);
+
+        // Show login notification
+        showNotification(
+          "login",
+          "Login successful",
+          "You are now logged in to the admin panel.",
+          userData.name
+        );
+
         return true;
       }
 

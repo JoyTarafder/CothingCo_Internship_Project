@@ -1,29 +1,23 @@
 "use client";
 
+import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import {
   FiBox,
-  FiChevronDown,
   FiHome,
   FiLogOut,
   FiSettings,
   FiShoppingCart,
   FiTag,
   FiTruck,
-  FiUser,
   FiUsers,
 } from "react-icons/fi";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
-
-  const toggleAdminDropdown = () => {
-    setAdminDropdownOpen(!adminDropdownOpen);
-  };
+  const { logout, user } = useAuth();
 
   const navItems = [
     { name: "Dashboard", path: "/", icon: FiHome },
@@ -33,6 +27,7 @@ export default function Sidebar() {
     { name: "User Management", path: "/users", icon: FiUsers },
     { name: "Vendor Management", path: "/vendors", icon: FiTruck },
     { name: "Site Management", path: "/site", icon: FiSettings },
+    { name: "Settings", path: "/settings", icon: FiSettings },
   ];
 
   // Animation variants
@@ -78,6 +73,11 @@ export default function Sidebar() {
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-indigo-200">
               Admin Panel
             </h1>
+            {user && (
+              <p className="text-xs text-indigo-300 mt-1">
+                {user.name} ({user.role})
+              </p>
+            )}
           </div>
         </motion.div>
       </div>
@@ -125,63 +125,15 @@ export default function Sidebar() {
       </nav>
 
       <div className="absolute bottom-0 w-full px-4 py-6 border-t border-indigo-800/50 bg-indigo-950/40 backdrop-blur-sm">
-        <div className="mb-3">
-          <motion.button
-            whileTap={{ scale: 0.98 }}
-            onClick={toggleAdminDropdown}
-            className="flex items-center justify-between w-full px-4 py-3 text-indigo-100 hover:bg-indigo-800/40 hover:text-white rounded-xl transition-all duration-300"
-          >
-            <div className="flex items-center">
-              <FiUser className="h-5 w-5 mr-3 text-blue-400" />
-              <span className="font-medium">Admin</span>
-            </div>
-            <motion.div
-              animate={{ rotate: adminDropdownOpen ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <FiChevronDown className="h-4 w-4" />
-            </motion.div>
-          </motion.button>
-
-          {adminDropdownOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="mt-2 bg-indigo-900/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border border-indigo-700/30"
-            >
-              <Link
-                href="/profile"
-                className="flex items-center w-full px-4 py-3.5 text-white hover:bg-gradient-to-r from-blue-600/20 to-indigo-600/20 group transition-all duration-300"
-              >
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mr-3 shadow-md group-hover:shadow-blue-500/30 transition-all duration-300">
-                  <FiUser className="h-4 w-4 text-white" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-medium">Profile</span>
-                  <span className="text-xs text-indigo-300 group-hover:text-indigo-200 transition-colors">
-                    View your profile details
-                  </span>
-                </div>
-              </Link>
-              <Link
-                href="/settings"
-                className="flex items-center w-full px-4 py-3 text-indigo-100 hover:bg-indigo-800/40 hover:text-white transition-all duration-300"
-              >
-                <FiSettings className="h-4 w-4 mr-3 text-indigo-300" />
-                <span className="font-medium">Settings</span>
-              </Link>
-              <motion.button
-                whileHover={{ x: 5 }}
-                className="flex items-center w-full px-4 py-3 text-indigo-100 hover:bg-indigo-800/40 hover:text-white transition-all duration-300"
-              >
-                <FiLogOut className="h-4 w-4 mr-3 text-red-400" />
-                <span className="font-medium">Logout</span>
-              </motion.button>
-            </motion.div>
-          )}
-        </div>
+        <motion.button
+          onClick={logout}
+          whileTap={{ scale: 0.98 }}
+          whileHover={{ x: 5 }}
+          className="flex items-center w-full px-4 py-3 text-indigo-100 hover:bg-indigo-800/40 hover:text-white rounded-xl transition-all duration-300"
+        >
+          <FiLogOut className="h-5 w-5 mr-3 text-red-400" />
+          <span className="font-medium">Logout</span>
+        </motion.button>
       </div>
     </motion.aside>
   );

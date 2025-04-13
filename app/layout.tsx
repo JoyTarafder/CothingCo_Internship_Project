@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/context/AuthContext";
 import { CategoriesProvider } from "@/context/CategoriesContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import type { Metadata } from "next";
@@ -59,7 +60,9 @@ export default function RootLayout({
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider>
-          <CategoriesProvider>{children}</CategoriesProvider>
+          <AuthProvider>
+            <CategoriesProvider>{children}</CategoriesProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

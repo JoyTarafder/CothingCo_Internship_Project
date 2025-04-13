@@ -12,6 +12,11 @@ import {
   FiUser,
 } from "react-icons/fi";
 
+// Pattern background style
+const patternStyle = {
+  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+};
+
 // Settings page component
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -118,25 +123,88 @@ export default function Settings() {
                 </div>
 
                 <div className="mb-8">
-                  <div className="flex items-center mb-6">
-                    <div className="relative">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="h-20 w-20 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg"
-                      >
-                        A
-                      </motion.div>
-                      <button className="absolute -bottom-2 -right-2 p-1.5 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-md">
-                        <FiUser className="h-4 w-4" />
-                      </button>
+                  <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 mb-6 relative overflow-hidden">
+                    <div
+                      className="absolute inset-0 opacity-10"
+                      style={patternStyle}
+                    ></div>
+                    <div className="relative z-10 flex items-center">
+                      <div className="relative">
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="h-24 w-24 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold shadow-lg border-4 border-white/30"
+                        >
+                          A
+                        </motion.div>
+                        <button className="absolute -bottom-2 -right-2 p-2 rounded-full bg-white text-indigo-600 hover:bg-indigo-50 transition-colors shadow-lg">
+                          <FiUser className="h-4 w-4" />
+                        </button>
+                      </div>
+                      <div className="ml-6">
+                        <h3 className="text-xl font-bold text-white drop-shadow-md">
+                          Admin User
+                        </h3>
+                        <p className="text-indigo-100 text-sm drop-shadow-md">
+                          admin@example.com
+                        </p>
+                        <div className="flex mt-2 space-x-2">
+                          <span className="px-2 py-1 bg-white/20 text-white text-xs rounded-md backdrop-blur-sm">
+                            Administrator
+                          </span>
+                          <span className="px-2 py-1 bg-white/20 text-white text-xs rounded-md backdrop-blur-sm">
+                            Full Access
+                          </span>
+                        </div>
+                      </div>
+                      <div className="ml-auto flex flex-col items-end">
+                        <button className="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-sm rounded-lg backdrop-blur-sm transition-colors mb-2">
+                          Change Cover
+                        </button>
+                      </div>
                     </div>
-                    <div className="ml-6">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                        Admin User
-                      </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        admin@example.com
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                      <div className="flex justify-between items-start mb-2">
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          Total Orders
+                        </p>
+                        <span className="p-1.5 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-md text-xs font-medium">
+                          +12%
+                        </span>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        248
+                      </p>
+                    </div>
+
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                      <div className="flex justify-between items-start mb-2">
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          Inventory Items
+                        </p>
+                        <span className="p-1.5 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-md text-xs font-medium">
+                          +5%
+                        </span>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        156
+                      </p>
+                    </div>
+
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                      <div className="flex justify-between items-start mb-2">
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          Total Revenue
+                        </p>
+                        <span className="p-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-md text-xs font-medium">
+                          +18%
+                        </span>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        $24.8K
                       </p>
                     </div>
                   </div>
@@ -201,6 +269,46 @@ export default function Settings() {
                       </div>
                     </div>
 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                      <div>
+                        <label
+                          htmlFor="role"
+                          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        >
+                          Role
+                        </label>
+                        <select
+                          id="role"
+                          defaultValue="administrator"
+                          className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent"
+                        >
+                          <option value="administrator">Administrator</option>
+                          <option value="manager">Manager</option>
+                          <option value="editor">Editor</option>
+                          <option value="viewer">Viewer</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="timezone"
+                          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                        >
+                          Timezone
+                        </label>
+                        <select
+                          id="timezone"
+                          defaultValue="est"
+                          className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent"
+                        >
+                          <option value="est">Eastern Time (ET)</option>
+                          <option value="cst">Central Time (CT)</option>
+                          <option value="mst">Mountain Time (MT)</option>
+                          <option value="pst">Pacific Time (PT)</option>
+                          <option value="utc">UTC</option>
+                        </select>
+                      </div>
+                    </div>
+
                     <div>
                       <label
                         htmlFor="bio"
@@ -214,6 +322,122 @@ export default function Settings() {
                         defaultValue="Administrator with full system access and permissions."
                         className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent"
                       />
+                    </div>
+
+                    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                      <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
+                        Social Profiles
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                          <label
+                            htmlFor="twitter"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                          >
+                            Twitter
+                          </label>
+                          <div className="relative">
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                              @
+                            </span>
+                            <input
+                              type="text"
+                              id="twitter"
+                              placeholder="username"
+                              className="w-full pl-8 px-4 py-2.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="linkedin"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                          >
+                            LinkedIn
+                          </label>
+                          <input
+                            type="text"
+                            id="linkedin"
+                            placeholder="profile URL"
+                            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                      <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
+                        Skills & Expertise
+                      </h3>
+                      <div className="mb-4">
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            "Administration",
+                            "User Management",
+                            "Inventory",
+                            "E-commerce",
+                            "Analytics",
+                          ].map((skill, i) => (
+                            <div
+                              key={i}
+                              className="group flex items-center bg-indigo-50 dark:bg-gray-700/50 text-indigo-600 dark:text-indigo-300 px-3 py-1.5 rounded-lg"
+                            >
+                              <span className="text-sm font-medium">
+                                {skill}
+                              </span>
+                              <button className="ml-2 text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-200">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-4 w-4"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-3 flex">
+                          <input
+                            type="text"
+                            placeholder="Add a skill..."
+                            className="flex-1 px-4 py-2 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-l-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent"
+                          />
+                          <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-r-xl transition-colors">
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                      <div>
+                        <button
+                          type="button"
+                          className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl transition-colors dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+                        >
+                          Delete Account
+                        </button>
+                      </div>
+                      <div className="flex space-x-3">
+                        <button
+                          type="button"
+                          className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors shadow-md shadow-indigo-600/20"
+                        >
+                          Save Changes
+                        </button>
+                      </div>
                     </div>
                   </form>
                 </div>

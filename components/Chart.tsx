@@ -13,6 +13,8 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -43,20 +45,27 @@ type BarChartProps = {
 type ChartProps = LineChartProps | BarChartProps;
 
 export default function Chart({ title, type, data, options }: ChartProps) {
+  const [timeFilter, setTimeFilter] = useState<"week" | "month" | "year">(
+    "month"
+  );
+
   const defaultOptions: ChartOptions<"line" | "bar"> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top" as const,
+        align: "end" as const,
         labels: {
-          boxWidth: 10,
+          boxWidth: 8,
+          boxHeight: 8,
           usePointStyle: true,
           pointStyle: "circle",
           padding: 20,
           font: {
-            size: 12,
+            size: 11,
             family: "'Inter', sans-serif",
+            weight: "500",
           },
         },
       },
@@ -64,7 +73,7 @@ export default function Chart({ title, type, data, options }: ChartProps) {
         display: false,
       },
       tooltip: {
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
         titleColor: "#1E293B",
         bodyColor: "#334155",
         bodyFont: {
@@ -79,6 +88,8 @@ export default function Chart({ title, type, data, options }: ChartProps) {
         borderWidth: 1,
         usePointStyle: true,
         boxWidth: 10,
+        cornerRadius: 8,
+        caretSize: 6,
       },
     },
     scales: {
@@ -89,65 +100,135 @@ export default function Chart({ title, type, data, options }: ChartProps) {
         ticks: {
           font: {
             size: 11,
+            family: "'Inter', sans-serif",
           },
+          color: "#94A3B8",
+        },
+        border: {
+          dash: [5, 5],
         },
       },
       y: {
         grid: {
           color: "rgba(203, 213, 225, 0.2)",
+          drawBorder: false,
         },
         ticks: {
           font: {
             size: 11,
+            family: "'Inter', sans-serif",
           },
+          color: "#94A3B8",
+          callback: function (value: any) {
+            if (typeof value === "number") {
+              // For values like 1000, return 1k
+              return value >= 1000 ? value / 1000 + "k" : value;
+            }
+            return value;
+          },
+        },
+        border: {
+          dash: [5, 5],
+          display: false,
         },
       },
     },
     elements: {
       line: {
         tension: 0.4,
+        borderWidth: 2,
+        fill: true,
       },
       point: {
-        radius: 4,
+        radius: 3,
         borderWidth: 2,
         hoverRadius: 6,
+        hoverBorderWidth: 3,
       },
+      bar: {
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+    },
+    interaction: {
+      mode: "index",
+      intersect: false,
+    },
+    animation: {
+      duration: 1000,
+      easing: "easeOutQuart",
     },
   };
 
   const mergedOptions = { ...defaultOptions, ...options };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5 h-96 transition-all hover:shadow-xl">
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/30 p-6 h-[450px] transition-all hover:shadow-2xl backdrop-blur-md"
+    >
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
           {title}
         </h2>
-        <div className="flex gap-2">
-          <button className="text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+        <div className="flex gap-2 bg-gray-100/80 dark:bg-gray-700/80 rounded-xl p-1 backdrop-blur-sm">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setTimeFilter("week")}
+            className={`text-xs px-4 py-1.5 rounded-lg transition-colors ${
+              timeFilter === "week"
+                ? "bg-white dark:bg-indigo-600 text-gray-800 dark:text-white shadow-sm"
+                : "text-gray-600 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-600/50"
+            }`}
+          >
             Week
-          </button>
-          <button className="text-xs px-3 py-1 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors">
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setTimeFilter("month")}
+            className={`text-xs px-4 py-1.5 rounded-lg transition-colors ${
+              timeFilter === "month"
+                ? "bg-white dark:bg-indigo-600 text-gray-800 dark:text-white shadow-sm"
+                : "text-gray-600 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-600/50"
+            }`}
+          >
             Month
-          </button>
-          <button className="text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setTimeFilter("year")}
+            className={`text-xs px-4 py-1.5 rounded-lg transition-colors ${
+              timeFilter === "year"
+                ? "bg-white dark:bg-indigo-600 text-gray-800 dark:text-white shadow-sm"
+                : "text-gray-600 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-600/50"
+            }`}
+          >
             Year
-          </button>
+          </motion.button>
         </div>
       </div>
-      <div className="h-[calc(100%-40px)]">
-        {type === "line" ? (
-          <Line
-            data={data as ChartData<"line">}
-            options={mergedOptions as ChartOptions<"line">}
-          />
-        ) : (
-          <Bar
-            data={data as ChartData<"bar">}
-            options={mergedOptions as ChartOptions<"bar">}
-          />
-        )}
+      <div className="h-[calc(100%-60px)]">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="h-full"
+        >
+          {type === "line" ? (
+            <Line
+              data={data as ChartData<"line">}
+              options={mergedOptions as ChartOptions<"line">}
+            />
+          ) : (
+            <Bar
+              data={data as ChartData<"bar">}
+              options={mergedOptions as ChartOptions<"bar">}
+            />
+          )}
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

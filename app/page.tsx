@@ -22,6 +22,9 @@ import {
 } from "react-icons/fi";
 
 export default function Dashboard() {
+  // Time filter for sales overview
+  const [timeFilter, setTimeFilter] = useState("monthly"); // 'weekly', 'monthly', or 'yearly'
+
   // Sample data for the dashboard
   const [orderChartData, setOrderChartData] = useState({
     labels: ["January", "February", "March", "April", "May", "June"],
@@ -142,6 +145,75 @@ export default function Dashboard() {
   const salesChartRef = useRef(null);
   const orderStatusChartRef = useRef(null);
 
+  // Weekly, monthly, and yearly data for filtering
+  const [weeklyData, setWeeklyData] = useState({
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    datasets: [
+      {
+        label: "This Week",
+        data: [0, 0, 0, 0, 0, 0, 0],
+        borderColor: "rgb(59, 130, 246)",
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        tension: 0.4,
+      },
+      {
+        label: "Last Week",
+        data: [0, 0, 0, 0, 0, 0, 0],
+        borderColor: "rgb(148, 163, 184)",
+        backgroundColor: "rgba(148, 163, 184, 0.2)",
+        tension: 0.4,
+        borderDash: [5, 5],
+      },
+    ],
+  });
+
+  const [monthlyData, setMonthlyData] = useState({
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    datasets: [
+      {
+        label: "2025",
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        borderColor: "rgb(59, 130, 246)",
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        tension: 0.4,
+      },
+      {
+        label: "2024",
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        borderColor: "rgb(148, 163, 184)",
+        backgroundColor: "rgba(148, 163, 184, 0.2)",
+        tension: 0.4,
+        borderDash: [5, 5],
+      },
+    ],
+  });
+
+  const [yearlyData, setYearlyData] = useState({
+    labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
+    datasets: [
+      {
+        label: "Annual Sales",
+        data: [0, 0, 0, 0, 0, 0],
+        borderColor: "rgb(59, 130, 246)",
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        tension: 0.4,
+      },
+    ],
+  });
+
   // Simulate data loading
   useEffect(() => {
     // Simulate API call to get data
@@ -235,8 +307,98 @@ export default function Dashboard() {
           },
         ],
       });
+
+      // Set weekly data
+      setWeeklyData({
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [
+          {
+            label: "This Week",
+            data: [4200, 5800, 5200, 6500, 7800, 8200, 6800],
+            borderColor: "rgb(59, 130, 246)",
+            backgroundColor: "rgba(59, 130, 246, 0.2)",
+            tension: 0.4,
+          },
+          {
+            label: "Last Week",
+            data: [3800, 4900, 4600, 5900, 6700, 7500, 6200],
+            borderColor: "rgb(148, 163, 184)",
+            backgroundColor: "rgba(148, 163, 184, 0.2)",
+            tension: 0.4,
+            borderDash: [5, 5],
+          },
+        ],
+      });
+
+      // Set monthly data (use the existing salesChartData)
+      setMonthlyData({
+        labels: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+        datasets: [
+          {
+            label: "2025",
+            data: [
+              18500, 22000, 19500, 24000, 20500, 25000, 23000, 26500, 24000,
+              28000, 26500, 30000,
+            ],
+            borderColor: "rgb(59, 130, 246)",
+            backgroundColor: "rgba(59, 130, 246, 0.2)",
+            tension: 0.4,
+          },
+          {
+            label: "2024",
+            data: [
+              15000, 18000, 16500, 21000, 18000, 22000, 20000, 23500, 21000,
+              25000, 23000, 27000,
+            ],
+            borderColor: "rgb(148, 163, 184)",
+            backgroundColor: "rgba(148, 163, 184, 0.2)",
+            tension: 0.4,
+            borderDash: [5, 5],
+          },
+        ],
+      });
+
+      // Set yearly data
+      setYearlyData({
+        labels: ["2020", "2021", "2022", "2023", "2024", "2025"],
+        datasets: [
+          {
+            label: "Annual Sales",
+            data: [125000, 165000, 195000, 235000, 265000, 315000],
+            borderColor: "rgb(59, 130, 246)",
+            backgroundColor: "rgba(59, 130, 246, 0.2)",
+            tension: 0.4,
+          },
+        ],
+      });
     }, 1000);
   }, []);
+
+  // Get current chart data based on time filter
+  const getCurrentChartData = () => {
+    switch (timeFilter) {
+      case "weekly":
+        return weeklyData;
+      case "yearly":
+        return yearlyData;
+      case "monthly":
+      default:
+        return monthlyData;
+    }
+  };
 
   // Function to generate and download PDF report
   const generatePdfReport = async () => {
@@ -784,17 +946,42 @@ export default function Dashboard() {
                       Sales Overview
                     </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      Comparison between current and previous year
+                      {timeFilter === "weekly" &&
+                        "Comparison between current and previous week"}
+                      {timeFilter === "monthly" &&
+                        "Comparison between current and previous year"}
+                      {timeFilter === "yearly" && "Annual sales over the years"}
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="text-xs px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm">
+                    <button
+                      onClick={() => setTimeFilter("weekly")}
+                      className={`text-xs px-4 py-1.5 rounded-full ${
+                        timeFilter === "weekly"
+                          ? "bg-primary text-white"
+                          : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                      } transition-colors shadow-sm`}
+                    >
                       Weekly
                     </button>
-                    <button className="text-xs px-4 py-1.5 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors shadow-sm">
+                    <button
+                      onClick={() => setTimeFilter("monthly")}
+                      className={`text-xs px-4 py-1.5 rounded-full ${
+                        timeFilter === "monthly"
+                          ? "bg-primary text-white"
+                          : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                      } transition-colors shadow-sm`}
+                    >
                       Monthly
                     </button>
-                    <button className="text-xs px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm">
+                    <button
+                      onClick={() => setTimeFilter("yearly")}
+                      className={`text-xs px-4 py-1.5 rounded-full ${
+                        timeFilter === "yearly"
+                          ? "bg-primary text-white"
+                          : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                      } transition-colors shadow-sm`}
+                    >
                       Yearly
                     </button>
                   </div>
@@ -803,7 +990,7 @@ export default function Dashboard() {
                   <Chart
                     title="Sales Trends"
                     type="line"
-                    data={salesChartData}
+                    data={getCurrentChartData()}
                   />
                 </div>
               </div>

@@ -1,27 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import {
-  FiBell,
-  FiMenu,
-  FiMoon,
-  FiSearch,
-  FiSun,
-  FiUser,
-} from "react-icons/fi";
+import ThemeToggle from "@/components/ThemeToggle";
+import { FiBell, FiMenu, FiSearch, FiUser } from "react-icons/fi";
 
 type HeaderProps = {
   title: string;
 };
 
 export default function Header({ title }: HeaderProps) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    // You would implement actual dark mode toggle logic here
-  };
-
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between h-16 px-6 backdrop-blur-md bg-white/70 dark:bg-gray-800/70 border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm">
       <div className="flex items-center">
@@ -52,16 +38,7 @@ export default function Header({ title }: HeaderProps) {
           <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
         </button>
 
-        <button
-          onClick={toggleDarkMode}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-        >
-          {isDarkMode ? (
-            <FiSun className="h-5 w-5 text-amber-500" />
-          ) : (
-            <FiMoon className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-          )}
-        </button>
+        <ThemeToggle />
 
         <div className="relative">
           <button className="flex items-center space-x-2 py-1 px-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">

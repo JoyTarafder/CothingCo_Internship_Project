@@ -6,9 +6,9 @@ import { useState } from "react";
 import {
   FiBell,
   FiGlobe,
-  FiLock,
   FiMoon,
   FiShield,
+  FiSliders,
   FiUser,
 } from "react-icons/fi";
 
@@ -32,7 +32,7 @@ export default function Settings() {
     { id: "notifications", label: "Notifications", icon: FiBell },
     { id: "security", label: "Security", icon: FiShield },
     { id: "language", label: "Language", icon: FiGlobe },
-    { id: "privacy", label: "Privacy", icon: FiLock },
+    { id: "privacy", label: "Privacy", icon: FiSliders },
   ];
 
   // Helper function to show notification

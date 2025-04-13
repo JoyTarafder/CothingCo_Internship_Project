@@ -8,9 +8,10 @@ import { usePathname } from "next/navigation";
 import {
   FiBox,
   FiHome,
-  FiLogOut,
+  FiPower,
   FiSettings,
   FiShoppingCart,
+  FiSliders,
   FiTag,
   FiTruck,
   FiUsers,
@@ -29,7 +30,7 @@ export default function Sidebar() {
     { name: "User Management", path: "/users", icon: FiUsers },
     { name: "Vendor Management", path: "/vendors", icon: FiTruck },
     { name: "Site Management", path: "/site", icon: FiSettings },
-    { name: "Settings", path: "/settings", icon: FiSettings },
+    { name: "Settings", path: "/settings", icon: FiSliders },
   ];
 
   // Animation variants
@@ -156,7 +157,7 @@ export default function Sidebar() {
           whileHover={{ x: 5 }}
           className="flex items-center w-full px-4 py-3 text-indigo-100 hover:bg-indigo-800/40 hover:text-white rounded-xl transition-all duration-300"
         >
-          <FiLogOut className="h-5 w-5 mr-3 text-red-400" />
+          <FiPower className="h-5 w-5 mr-3 text-red-400" />
           <span className="font-medium">Logout</span>
         </motion.button>
       </div>

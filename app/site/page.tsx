@@ -11,6 +11,7 @@ import {
   FiPlusCircle,
   FiSettings,
   FiShare2,
+  FiSliders,
   FiTrash,
   FiX,
 } from "react-icons/fi";
@@ -469,7 +470,7 @@ export default function SiteManagementPage() {
   // Tab configurations
   const tabs = [
     { id: "banners", label: "Banners", icon: FiImage },
-    { id: "general", label: "General Settings", icon: FiSettings },
+    { id: "general", label: "General Settings", icon: FiSliders },
     { id: "seo", label: "SEO Settings", icon: FiGlobe },
     { id: "social", label: "Social Media", icon: FiShare2 },
     { id: "notifications", label: "Notifications", icon: FiBell },

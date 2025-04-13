@@ -3,7 +3,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   FiEye,
   FiEyeOff,
@@ -21,6 +21,8 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const validateForm = () => {
     let valid = true;
@@ -59,6 +61,8 @@ export default function LoginPage() {
 
       if (!success) {
         setLoginError("Invalid email or password");
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 500);
       }
     } catch (error) {
       setLoginError("An error occurred during login");
@@ -70,6 +74,31 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-gray-900 via-indigo-950 to-black">
+      <style jsx global>{`
+        @keyframes shake {
+          0% {
+            transform: translateX(0);
+          }
+          20% {
+            transform: translateX(-10px);
+          }
+          40% {
+            transform: translateX(10px);
+          }
+          60% {
+            transform: translateX(-10px);
+          }
+          80% {
+            transform: translateX(10px);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+        .animate-shake {
+          animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+      `}</style>
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-full">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"></div>
@@ -205,7 +234,11 @@ export default function LoginPage() {
                 )}
               </AnimatePresence>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                className={`space-y-6 ${isShaking ? "animate-shake" : ""}`}
+              >
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}

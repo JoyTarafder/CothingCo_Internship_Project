@@ -95,14 +95,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       setIsLoading(true);
 
-      // In a real app, you would call an API to authenticate
-      // This is a mock implementation for demonstration
-
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // For demo purposes, accept any valid-looking email/password
-      if (email && password.length >= 6) {
+      // Only allow specific login credentials
+      if (email === "admin@gmail.com" && password === "Admin1234") {
         const userData = {
           email,
           name: "Admin User",
@@ -122,11 +119,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         );
 
         return true;
+      } else {
+        // Show incorrect credentials notification
+        if (email === "admin@gmail.com") {
+          showNotification(
+            "error",
+            "Incorrect password",
+            "The password you entered is incorrect."
+          );
+        } else {
+          showNotification(
+            "error",
+            "Access denied",
+            "The email or password you entered is incorrect."
+          );
+        }
+        return false;
       }
-
-      return false;
     } catch (error) {
       console.error("Login failed", error);
+      showNotification(
+        "error",
+        "Login failed",
+        "An unexpected error occurred. Please try again."
+      );
       return false;
     } finally {
       setIsLoading(false);

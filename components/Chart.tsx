@@ -126,7 +126,7 @@ export default function Chart({ title, type, data, options = {} }: ChartProps) {
             size: 11,
             family: "'Inter', sans-serif",
           },
-          callback: function (value) {
+          callback: function (value: number) {
             // Format large numbers for readability
             if (value >= 1000) {
               return value >= 1000000

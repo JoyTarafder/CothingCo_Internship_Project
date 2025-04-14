@@ -130,7 +130,11 @@ export default function StatsOverview({
 function SparklineChart({ data, color }: { data: number[]; color: string }) {
   // Convert color class to actual HEX color
   const getHexColor = (colorClass: string) => {
-    const colorMap = {
+    type ColorMap = {
+      [key: string]: string;
+    };
+
+    const colorMap: ColorMap = {
       "text-blue-500": "#3b82f6",
       "text-green-500": "#10b981",
       "text-purple-500": "#8b5cf6",

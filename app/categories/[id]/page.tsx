@@ -11,7 +11,7 @@ import { FiArrowLeft, FiBox, FiFolder, FiLayers, FiPlus } from "react-icons/fi";
 export default function CategoryDetail() {
   const router = useRouter();
   const params = useParams();
-  const categoryId = params.id as string;
+  const categoryId = params?.id as string;
 
   // Get categories from context
   const { categories, addSubCategory } = useCategories();

@@ -2,7 +2,7 @@
 
 A comprehensive, feature-rich admin panel built with Next.js 15, TypeScript, and Tailwind CSS. This project provides a modern interface for managing products, orders, users, vendors, and more with a beautiful, responsive design.
 
-![Admin Panel Dashboard](public/dashboard-preview.png)
+![screencapture-admin-panel-v-1-netlify-app-2025-04-14-14_28_25](https://github.com/user-attachments/assets/42e8ae63-3b5f-4de6-9131-48fd324c44bb)
 
 ## Features
 

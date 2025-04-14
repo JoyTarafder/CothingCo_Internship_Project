@@ -11,8 +11,8 @@ import { FiArrowLeft, FiBox, FiEdit2, FiPlus, FiTrash2 } from "react-icons/fi";
 export default function SubcategoryProductsPage() {
   const router = useRouter();
   const params = useParams();
-  const categoryId = params.categoryId as string;
-  const subcategoryId = params.subcategoryId as string;
+  const categoryId = params?.categoryId as string;
+  const subcategoryId = params?.subcategoryId as string;
 
   // Get categories from context
   const { categories } = useCategories();
@@ -88,7 +88,9 @@ export default function SubcategoryProductsPage() {
   const handleAddProduct = () => {
     const newProduct = {
       id: `product-${products.length + 1}`,
-      name: `${category?.name || "Product"} ${subcategoryId}-${products.length + 1}`,
+      name: `${category?.name || "Product"} ${subcategoryId}-${
+        products.length + 1
+      }`,
       price: `$${(Math.random() * 100 + 10).toFixed(2)}`,
       stock: "In Stock",
       image: getRandomColor(),

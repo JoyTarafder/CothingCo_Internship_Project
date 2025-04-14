@@ -1,11 +1,11 @@
 "use client";
 
 import {
+  ArcElement,
   BarElement,
   CategoryScale,
-  ChartData,
   Chart as ChartJS,
-  ChartOptions,
+  Filler,
   Legend,
   LinearScale,
   LineElement,
@@ -14,9 +14,9 @@ import {
   Tooltip,
 } from "chart.js";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Bar, Line } from "react-chartjs-2";
+import { Bar, Doughnut, Line, Pie } from "react-chartjs-2";
 
+// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,71 +25,80 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler,
+  ArcElement
 );
 
-type LineChartProps = {
-  title: string;
-  type: "line";
-  data: ChartData<"line">;
-  options?: ChartOptions<"line">;
+type ChartProps = {
+  title?: string;
+  type: "line" | "bar" | "pie" | "doughnut";
+  data: any;
+  options?: any;
 };
 
-type BarChartProps = {
-  title: string;
-  type: "bar";
-  data: ChartData<"bar">;
-  options?: ChartOptions<"bar">;
-};
-
-type ChartProps = LineChartProps | BarChartProps;
-
-export default function Chart({ title, type, data, options }: ChartProps) {
-  const [timeFilter, setTimeFilter] = useState<"week" | "month" | "year">(
-    "month"
-  );
-
-  const defaultOptions: ChartOptions<"line" | "bar"> = {
+export default function Chart({ title, type, data, options = {} }: ChartProps) {
+  // Enhanced default options
+  const defaultOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top" as const,
-        align: "end" as const,
         labels: {
-          boxWidth: 8,
-          boxHeight: 8,
           usePointStyle: true,
-          pointStyle: "circle",
-          padding: 20,
+          padding: 15,
           font: {
-            size: 11,
+            size: 12,
             family: "'Inter', sans-serif",
-            weight: "500",
           },
         },
       },
-      title: {
-        display: false,
-      },
       tooltip: {
         backgroundColor: "rgba(255, 255, 255, 0.9)",
-        titleColor: "#1E293B",
-        bodyColor: "#334155",
+        titleColor: "#1f2937",
+        bodyColor: "#4b5563",
+        borderColor: "rgba(229, 231, 235, 0.5)",
+        borderWidth: 1,
+        padding: 10,
+        boxPadding: 5,
+        usePointStyle: true,
         bodyFont: {
           size: 12,
+          family: "'Inter', sans-serif",
         },
         titleFont: {
           size: 14,
+          family: "'Inter', sans-serif",
           weight: "bold",
         },
-        padding: 12,
-        borderColor: "rgba(203, 213, 225, 0.5)",
-        borderWidth: 1,
-        usePointStyle: true,
-        boxWidth: 10,
         cornerRadius: 8,
-        caretSize: 6,
+        displayColors: true,
+        boxWidth: 8,
+        boxHeight: 8,
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label || "";
+            if (label) {
+              label += ": ";
+            }
+            if (context.parsed.y !== null) {
+              if (
+                context.dataset.label === "Total Revenue" ||
+                context.dataset.label?.includes("Revenue")
+              ) {
+                label += new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "BDT",
+                  notation: "compact",
+                }).format(context.parsed.y);
+              } else {
+                label += context.parsed.y;
+              }
+            }
+            return label;
+          },
+        },
       },
     },
     scales: {
@@ -102,15 +111,11 @@ export default function Chart({ title, type, data, options }: ChartProps) {
             size: 11,
             family: "'Inter', sans-serif",
           },
-          color: "#94A3B8",
-        },
-        border: {
-          dash: [5, 5],
         },
       },
       y: {
         grid: {
-          color: "rgba(203, 213, 225, 0.2)",
+          color: "rgba(229, 231, 235, 0.4)",
           drawBorder: false,
         },
         ticks: {
@@ -118,116 +123,126 @@ export default function Chart({ title, type, data, options }: ChartProps) {
             size: 11,
             family: "'Inter', sans-serif",
           },
-          color: "#94A3B8",
-          callback: function (value: any) {
-            if (typeof value === "number") {
-              // For values like 1000, return 1k
-              return value >= 1000 ? value / 1000 + "k" : value;
+          callback: function (value) {
+            // Format large numbers for readability
+            if (value >= 1000) {
+              return value >= 1000000
+                ? (value / 1000000).toFixed(1) + "M"
+                : (value / 1000).toFixed(0) + "K";
             }
             return value;
           },
-        },
-        border: {
-          dash: [5, 5],
-          display: false,
         },
       },
     },
     elements: {
       line: {
         tension: 0.4,
-        borderWidth: 2,
-        fill: true,
       },
       point: {
         radius: 3,
+        hoverRadius: 5,
         borderWidth: 2,
-        hoverRadius: 6,
-        hoverBorderWidth: 3,
       },
       bar: {
         borderRadius: 6,
-        borderSkipped: false,
       },
-    },
-    interaction: {
-      mode: "index",
-      intersect: false,
-    },
-    animation: {
-      duration: 1000,
-      easing: "easeOutQuart",
     },
   };
 
-  const mergedOptions = { ...defaultOptions, ...options };
+  // Merge default options with provided options
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options,
+    plugins: {
+      ...defaultOptions.plugins,
+      ...(options.plugins || {}),
+    },
+  };
+
+  // Custom dark mode detection - better to use a context or hook in a real app
+  const isDarkMode =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  // Adjust chart options based on dark mode
+  if (isDarkMode) {
+    mergedOptions.plugins.tooltip = {
+      ...mergedOptions.plugins.tooltip,
+      backgroundColor: "rgba(31, 41, 55, 0.9)",
+      titleColor: "#f9fafb",
+      bodyColor: "#e5e7eb",
+      borderColor: "rgba(55, 65, 81, 0.5)",
+    };
+
+    if (mergedOptions.scales?.x) {
+      mergedOptions.scales.x = {
+        ...mergedOptions.scales.x,
+        ticks: {
+          ...mergedOptions.scales.x.ticks,
+          color: "#9ca3af",
+        },
+        grid: {
+          ...mergedOptions.scales.x.grid,
+          color: "rgba(75, 85, 99, 0.2)",
+        },
+      };
+    }
+
+    if (mergedOptions.scales?.y) {
+      mergedOptions.scales.y = {
+        ...mergedOptions.scales.y,
+        ticks: {
+          ...mergedOptions.scales.y.ticks,
+          color: "#9ca3af",
+        },
+        grid: {
+          ...mergedOptions.scales.y.grid,
+          color: "rgba(75, 85, 99, 0.2)",
+        },
+      };
+    }
+
+    mergedOptions.plugins.legend = {
+      ...mergedOptions.plugins.legend,
+      labels: {
+        ...mergedOptions.plugins.legend.labels,
+        color: "#e5e7eb",
+      },
+    };
+  }
+
+  // Render the appropriate chart based on type
+  const renderChart = () => {
+    switch (type) {
+      case "line":
+        return <Line data={data} options={mergedOptions} />;
+      case "bar":
+        return <Bar data={data} options={mergedOptions} />;
+      case "pie":
+        return <Pie data={data} options={mergedOptions} />;
+      case "doughnut":
+        return <Doughnut data={data} options={mergedOptions} />;
+      default:
+        return <Line data={data} options={mergedOptions} />;
+    }
+  };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/30 p-6 h-[450px] transition-all hover:shadow-2xl backdrop-blur-md"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="w-full h-full flex flex-col"
     >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+      {title && (
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
           {title}
-        </h2>
-        <div className="flex gap-2 bg-gray-100/80 dark:bg-gray-700/80 rounded-xl p-1 backdrop-blur-sm">
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setTimeFilter("week")}
-            className={`text-xs px-4 py-1.5 rounded-lg transition-colors ${
-              timeFilter === "week"
-                ? "bg-white dark:bg-indigo-600 text-gray-800 dark:text-white shadow-sm"
-                : "text-gray-600 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-600/50"
-            }`}
-          >
-            Week
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setTimeFilter("month")}
-            className={`text-xs px-4 py-1.5 rounded-lg transition-colors ${
-              timeFilter === "month"
-                ? "bg-white dark:bg-indigo-600 text-gray-800 dark:text-white shadow-sm"
-                : "text-gray-600 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-600/50"
-            }`}
-          >
-            Month
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setTimeFilter("year")}
-            className={`text-xs px-4 py-1.5 rounded-lg transition-colors ${
-              timeFilter === "year"
-                ? "bg-white dark:bg-indigo-600 text-gray-800 dark:text-white shadow-sm"
-                : "text-gray-600 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-600/50"
-            }`}
-          >
-            Year
-          </motion.button>
-        </div>
-      </div>
-      <div className="h-[calc(100%-60px)]">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="h-full"
-        >
-          {type === "line" ? (
-            <Line
-              data={data as ChartData<"line">}
-              options={mergedOptions as ChartOptions<"line">}
-            />
-          ) : (
-            <Bar
-              data={data as ChartData<"bar">}
-              options={mergedOptions as ChartOptions<"bar">}
-            />
-          )}
-        </motion.div>
+        </h3>
+      )}
+      <div className="flex-1 flex items-center justify-center">
+        {renderChart()}
       </div>
     </motion.div>
   );

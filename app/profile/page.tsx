@@ -3,7 +3,8 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   FiBriefcase,
   FiCalendar,
@@ -18,6 +19,15 @@ import {
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("overview");
+  const searchParams = useSearchParams();
+
+  // Check for tab parameter in URL when component mounts
+  useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    if (tabParam && ["overview", "activity", "security"].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
 
   // User profile data (in a real app, this would come from an API)
   const user = {

@@ -40,7 +40,7 @@ export default function DashboardStatsGrid() {
       title: "Total Revenue",
       value: "৳48,258.42",
       icon: <TakaIcon className="h-6 w-6 text-white" />,
-      iconColor: "bg-blue-500",
+      iconColor: "bg-gradient-to-br from-blue-500 to-blue-700",
       trend: {
         value: 12.5,
         isPositive: true,
@@ -50,7 +50,7 @@ export default function DashboardStatsGrid() {
       title: "Total Orders",
       value: "862",
       icon: <FiShoppingBag className="h-6 w-6 text-white" />,
-      iconColor: "bg-green-500",
+      iconColor: "bg-gradient-to-br from-emerald-500 to-emerald-700",
       trend: {
         value: 8.2,
         isPositive: true,
@@ -60,7 +60,7 @@ export default function DashboardStatsGrid() {
       title: "New Customers",
       value: "124",
       icon: <FiUsers className="h-6 w-6 text-white" />,
-      iconColor: "bg-purple-500",
+      iconColor: "bg-gradient-to-br from-purple-500 to-purple-700",
       trend: {
         value: 5.8,
         isPositive: true,
@@ -70,7 +70,7 @@ export default function DashboardStatsGrid() {
       title: "Conversion Rate",
       value: "3.6%",
       icon: <FiActivity className="h-6 w-6 text-white" />,
-      iconColor: "bg-amber-500",
+      iconColor: "bg-gradient-to-br from-amber-500 to-amber-700",
       trend: {
         value: 2.4,
         isPositive: false,
@@ -102,10 +102,14 @@ export default function DashboardStatsGrid() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"
+      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8"
     >
       {stats.map((stat, index) => (
-        <motion.div key={index} variants={cardVariants}>
+        <motion.div
+          key={index}
+          variants={cardVariants}
+          className="transform hover:-translate-y-2 transition-all duration-300"
+        >
           <DashboardCard
             title={stat.title}
             value={stat.value}

@@ -342,7 +342,7 @@ export default function Dashboard() {
         });
 
         // Add footer
-        const totalPages = doc.internal.getNumberOfPages();
+        const totalPages = (doc.internal as any).getNumberOfPages();
         for (let i = 1; i <= totalPages; i++) {
           doc.setPage(i);
 

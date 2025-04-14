@@ -49,6 +49,31 @@ function getInitialProps() {
   };
 }
 
+// Theme initialization script to prevent flash of incorrect theme
+function getThemeScript() {
+  return {
+    __html: `
+      (function() {
+        function getInitialTheme() {
+          const savedTheme = localStorage.getItem('theme');
+          if (savedTheme) {
+            return savedTheme;
+          }
+          
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          
+          return 'light';
+        }
+        
+        const theme = getInitialTheme();
+        document.documentElement.classList.add(theme);
+      })();
+    `,
+  };
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -58,6 +83,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={getInitialProps()} />
+        <script dangerouslySetInnerHTML={getThemeScript()} />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider>

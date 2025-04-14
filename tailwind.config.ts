@@ -21,6 +21,18 @@ const config: Config = {
           dark: "#1E293B",
           light: "#F1F5F9",
         },
+        dark: {
+          bg: "#1E293B",
+          text: "#F1F5F9",
+          card: "#334155",
+          border: "#475569",
+        },
+        light: {
+          bg: "#F1F5F9",
+          text: "#1E293B",
+          card: "#FFFFFF",
+          border: "#E2E8F0",
+        },
       },
       keyframes: {
         fadeIn: {

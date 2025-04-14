@@ -314,7 +314,7 @@ export default function Dashboard() {
           // Custom styling for status column
           didDrawCell: (data) => {
             if (data.section === "body" && data.column.index === 2) {
-              const status = data.cell.raw;
+              const status = data.cell.raw as string;
               let color;
 
               if (status === "Critical") color = "#ef4444"; // red-500
@@ -325,7 +325,7 @@ export default function Dashboard() {
               doc.setTextColor(color);
               doc.setFont("helvetica", "bold");
               doc.text(
-                status,
+                status || "",
                 data.cell.x + data.cell.width / 2,
                 data.cell.y + data.cell.height / 2,
                 { align: "center", baseline: "middle" }

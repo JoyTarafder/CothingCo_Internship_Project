@@ -449,14 +449,20 @@ export default function Dashboard() {
     datasets: [
       {
         label: "2025",
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        data: [
+          18500, 22500, 28000, 32000, 38000, 42000, 48000, 52000, 58000, 62000,
+          68000, 72000,
+        ],
         borderColor: "rgb(59, 130, 246)",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
         tension: 0.4,
       },
       {
         label: "2024",
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        data: [
+          10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000,
+          60000, 65000,
+        ],
         borderColor: "rgb(148, 163, 184)",
         backgroundColor: "rgba(148, 163, 184, 0.2)",
         tension: 0.4,
@@ -577,7 +583,6 @@ export default function Dashboard() {
             borderColor: "rgb(59, 130, 246)",
             backgroundColor: "rgba(59, 130, 246, 0.2)",
             tension: 0.4,
-            fill: true,
           },
           {
             label: "2024",
@@ -589,7 +594,6 @@ export default function Dashboard() {
             backgroundColor: "rgba(148, 163, 184, 0.2)",
             tension: 0.4,
             borderDash: [5, 5],
-            fill: true,
           },
         ],
       });

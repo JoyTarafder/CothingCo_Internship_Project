@@ -23,7 +23,7 @@ export default function ProfilePage() {
 
   // Check for tab parameter in URL when component mounts
   useEffect(() => {
-    const tabParam = searchParams.get("tab");
+    const tabParam = searchParams?.get("tab");
     if (tabParam && ["overview", "activity", "security"].includes(tabParam)) {
       setActiveTab(tabParam);
     }

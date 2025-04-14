@@ -6,12 +6,6 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  output: "standalone",
-  swcMinify: true,
-  // This works with the @netlify/plugin-nextjs plugin to optimize caching
-  images: {
-    unoptimized: true,
-  },
 };
 
 export default nextConfig;

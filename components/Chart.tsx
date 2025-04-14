@@ -77,7 +77,7 @@ export default function Chart({ title, type, data, options = {} }: ChartProps) {
         boxWidth: 8,
         boxHeight: 8,
         callbacks: {
-          label: function (context: any) {
+          label: function (context) {
             let label = context.dataset.label || "";
             if (label) {
               label += ": ";
@@ -123,7 +123,7 @@ export default function Chart({ title, type, data, options = {} }: ChartProps) {
             size: 11,
             family: "'Inter', sans-serif",
           },
-          callback: function (value: number) {
+          callback: function (value) {
             // Format large numbers for readability
             if (value >= 1000) {
               return value >= 1000000

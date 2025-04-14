@@ -791,7 +791,7 @@ export default function Dashboard() {
                     },
                     tooltip: {
                       callbacks: {
-                        label: function (context) {
+                        label: function (context: any) {
                           const label = context.label || "";
                           const value = context.raw || 0;
                           return `${label}: ${value}%`;

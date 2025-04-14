@@ -77,7 +77,10 @@ export default function Chart({ title, type, data, options = {} }: ChartProps) {
         boxWidth: 8,
         boxHeight: 8,
         callbacks: {
-          label: function (context) {
+          label: function (context: {
+            dataset: { label?: string };
+            parsed: { y: number | null };
+          }) {
             let label = context.dataset.label || "";
             if (label) {
               label += ": ";

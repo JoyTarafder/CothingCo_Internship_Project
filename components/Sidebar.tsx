@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  FiBarChart2,
   FiBox,
   FiHome,
   FiPower,
@@ -26,6 +27,7 @@ export default function Sidebar() {
     { name: "Dashboard", path: "/", icon: FiHome },
     { name: "Order Management", path: "/orders", icon: FiShoppingCart },
     { name: "Inventory", path: "/inventory", icon: FiBox },
+    { name: "Analytics", path: "/analytics", icon: FiBarChart2 },
     { name: "Category Management", path: "/categories", icon: FiTag },
     { name: "User Management", path: "/users", icon: FiUsers },
     { name: "Vendor Management", path: "/vendors", icon: FiTruck },

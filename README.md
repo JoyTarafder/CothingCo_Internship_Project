@@ -83,8 +83,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Default Login Credentials
 
-- **Email**: admin@example.com
-- **Password**: admin123
+- **Email**: admin@gmail.com
+- **Password**: Admin1234
 
 ## Installation Troubleshooting
 

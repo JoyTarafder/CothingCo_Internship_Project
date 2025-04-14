@@ -47,7 +47,7 @@ export default function Sidebar() {
 
   const navItemVariants = {
     hidden: { opacity: 0, x: -10 },
-    visible: (i) => ({
+    visible: (i: number) => ({
       opacity: 1,
       x: 0,
       transition: {

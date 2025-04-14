@@ -195,7 +195,8 @@ export default function Dashboard() {
         doc.line(20, yPos, 55, yPos);
         yPos += 8;
 
-        autoTable(doc, {
+        // Store the result of autoTable to get the final Y position
+        const tableResult = autoTable(doc, {
           startY: yPos,
           head: [["Metric", "Value", "Change"]],
           body: [
@@ -224,7 +225,7 @@ export default function Dashboard() {
           margin: { left: 20, right: 20 },
         });
 
-        yPos = doc.lastAutoTable.finalY + 15;
+        yPos = (tableResult as any).finalY + 15;
 
         // Add Order Status section with styled table
         doc.setFont("helvetica", "bold");
@@ -237,7 +238,8 @@ export default function Dashboard() {
         doc.line(20, yPos, 45, yPos);
         yPos += 8;
 
-        autoTable(doc, {
+        // Store the result of autoTable to get the final Y position
+        const orderStatusTable = autoTable(doc, {
           startY: yPos,
           head: [["Status", "Count", "Percentage"]],
           body: [
@@ -266,7 +268,7 @@ export default function Dashboard() {
           margin: { left: 20, right: 20 },
         });
 
-        yPos = doc.lastAutoTable.finalY + 15;
+        yPos = (orderStatusTable as any).finalY + 15;
 
         // Add Low Stock Items section with styled table
         doc.setFont("helvetica", "bold");

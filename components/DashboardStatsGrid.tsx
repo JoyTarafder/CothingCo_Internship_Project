@@ -38,7 +38,7 @@ export default function DashboardStatsGrid() {
   const stats: Stat[] = [
     {
       title: "Total Revenue",
-      value: "৳48,258.42",
+      value: "৳825.42",
       icon: <TakaIcon className="h-6 w-6 text-white" />,
       iconColor: "bg-gradient-to-br from-blue-500 to-blue-700",
       trend: {

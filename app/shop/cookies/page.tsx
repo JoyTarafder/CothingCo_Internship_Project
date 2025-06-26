@@ -5,7 +5,6 @@ import { useState } from "react";
 import {
   FiAlertCircle,
   FiCalendar,
-  FiCookie,
   FiEye,
   FiInfo,
   FiSettings,
@@ -14,6 +13,7 @@ import {
   FiToggleLeft,
   FiToggleRight,
 } from "react-icons/fi";
+import { MdCookie } from "react-icons/md";
 
 export default function CookiePolicyPage() {
   const [cookiePreferences, setCookiePreferences] = useState({
@@ -113,7 +113,7 @@ export default function CookiePolicyPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
-            <FiCookie className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+            <MdCookie className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Cookie Policy
             </h1>

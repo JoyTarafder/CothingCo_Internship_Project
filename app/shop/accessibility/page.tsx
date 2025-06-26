@@ -5,15 +5,14 @@ import {
   FiAlertCircle,
   FiCalendar,
   FiCheck,
-  FiEar,
   FiEye,
   FiHeart,
   FiInfo,
-  FiKeyboard,
   FiMail,
   FiMousePointer,
   FiSettings,
 } from "react-icons/fi";
+import { MdHearing, MdKeyboard } from "react-icons/md";
 
 export default function AccessibilityPage() {
   const accessibilityFeatures = [
@@ -29,7 +28,7 @@ export default function AccessibilityPage() {
       ],
     },
     {
-      icon: <FiKeyboard className="w-6 h-6" />,
+      icon: <MdKeyboard className="w-6 h-6" />,
       title: "Keyboard Navigation",
       features: [
         "Full keyboard navigation support",
@@ -40,7 +39,7 @@ export default function AccessibilityPage() {
       ],
     },
     {
-      icon: <FiEar className="w-6 h-6" />,
+      icon: <MdHearing className="w-6 h-6" />,
       title: "Screen Reader Support",
       features: [
         "Semantic HTML structure",
@@ -88,7 +87,7 @@ export default function AccessibilityPage() {
     {
       name: "Screen Readers",
       tools: ["NVDA", "JAWS", "VoiceOver", "TalkBack"],
-      icon: <FiEar className="w-5 h-5" />,
+      icon: <MdHearing className="w-5 h-5" />,
     },
     {
       name: "Voice Control",
@@ -103,7 +102,7 @@ export default function AccessibilityPage() {
     {
       name: "Alternative Input",
       tools: ["Switch navigation", "Eye tracking", "Head tracking"],
-      icon: <FiKeyboard className="w-5 h-5" />,
+      icon: <MdKeyboard className="w-5 h-5" />,
     },
   ];
 

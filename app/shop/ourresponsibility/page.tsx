@@ -9,19 +9,19 @@ import {
   FiDroplet,
   FiHeart,
   FiHome,
-  FiLeaf,
-  FiRecycle,
   FiShield,
   FiSun,
   FiTrendingUp,
   FiTruck,
   FiUsers,
 } from "react-icons/fi";
+// Import missing icons from Material Design
+import { MdEco, MdRecycling } from "react-icons/md"; // For leaf/eco icon
 
 export default function OurResponsibilityPage() {
   const responsibilityAreas = [
     {
-      icon: <FiLeaf className="w-8 h-8" />,
+      icon: <MdEco className="w-8 h-8" />,
       title: "Environmental Sustainability",
       description:
         "Protecting our planet through eco-friendly practices and sustainable fashion",
@@ -75,7 +75,7 @@ export default function OurResponsibilityPage() {
 
   const sustainabilityStats = [
     {
-      icon: <FiRecycle className="w-6 h-6" />,
+      icon: <MdRecycling className="w-6 h-6" />,
       number: "85%",
       label: "Recycled Materials Used",
       description: "In packaging and manufacturing",

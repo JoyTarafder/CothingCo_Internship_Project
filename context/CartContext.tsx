@@ -328,6 +328,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const promoDiscount = promoCode
     ? promoCode.type === "percentage"
       ? Math.round(subtotal * (promoCode.discount / 100))
+      : promoCode.code === "FREESHIP"
+      ? shipping // For free shipping, discount equals shipping cost
       : promoCode.discount
     : 0;
 

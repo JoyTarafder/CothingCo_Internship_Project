@@ -58,8 +58,9 @@ export default function PromoCodeDemoPage() {
             Promo Code Demo
           </h1>
           <p className="text-gray-600 dark:text-gray-400 font-light">
-            Try applying the promo code "NEWUSER" to see the notifications in
-            action
+            Try applying any of the available promo codes to see the
+            notifications in action. Each code has different requirements and
+            discounts.
           </p>
         </div>
 
@@ -83,19 +84,6 @@ export default function PromoCodeDemoPage() {
                   <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <FiTag className="h-5 w-5 text-indigo-500" />
-                      <span className="font-medium">NEWUSER</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      10% discount for new users.{" "}
-                      <span className="text-amber-600 dark:text-amber-500 font-medium">
-                        One-time use only!
-                      </span>
-                    </p>
-                  </div>
-
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FiTag className="h-5 w-5 text-indigo-500" />
                       <span className="font-medium">SAVE10</span>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -106,10 +94,43 @@ export default function PromoCodeDemoPage() {
                   <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <FiTag className="h-5 w-5 text-indigo-500" />
+                      <span className="font-medium">SAVE20</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      20% off orders over ৳1000
+                    </p>
+                  </div>
+
+                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FiTag className="h-5 w-5 text-indigo-500" />
                       <span className="font-medium">WELCOME100</span>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       ৳100 off orders over ৳800
+                    </p>
+                  </div>
+
+                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FiTag className="h-5 w-5 text-indigo-500" />
+                      <span className="font-medium">NEWUSER</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      15% discount for new users (min ৳300).{" "}
+                      <span className="text-amber-600 dark:text-amber-500 font-medium">
+                        One-time use only!
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FiTag className="h-5 w-5 text-green-500" />
+                      <span className="font-medium">FREESHIP</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Free shipping (৳100 value) - No minimum purchase required
                     </p>
                   </div>
                 </div>

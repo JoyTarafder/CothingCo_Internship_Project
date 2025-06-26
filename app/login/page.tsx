@@ -423,6 +423,9 @@ export default function LoginPage() {
                     Contact admin
                   </Link>
                 </p>
+                <p className="mt-4 text-sm text-gray-400">
+                  Demo Credentials: user@example.com / password
+                </p>
               </motion.div>
             </div>
           </div>

@@ -40,8 +40,7 @@ export default function ProductsPage() {
       price: 199.99,
       stock: 45,
       rating: 4.8,
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "/images/products/1-classic-cotton-tshirt.jpg",
     },
     {
       id: "PRD-002",
@@ -50,8 +49,7 @@ export default function ProductsPage() {
       price: 149.5,
       stock: 32,
       rating: 4.5,
-      image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "/images/products/4-premium-hoodie.jpg",
     },
     {
       id: "PRD-003",
@@ -60,8 +58,7 @@ export default function ProductsPage() {
       price: 89.99,
       stock: 18,
       rating: 4.7,
-      image:
-        "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "/images/products/5-slim-fit-jeans.jpg",
     },
     {
       id: "PRD-004",
@@ -70,8 +67,7 @@ export default function ProductsPage() {
       price: 79.95,
       stock: 23,
       rating: 4.4,
-      image:
-        "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "/images/products/6-floral-print-blouse.jpg",
     },
     {
       id: "PRD-005",
@@ -80,8 +76,7 @@ export default function ProductsPage() {
       price: 45.0,
       stock: 56,
       rating: 4.9,
-      image:
-        "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "/images/products/7-kids-graphic-tshirt.jpg",
     },
     {
       id: "PRD-006",
@@ -90,8 +85,7 @@ export default function ProductsPage() {
       price: 24.99,
       stock: 120,
       rating: 4.6,
-      image:
-        "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "/images/products/8-oversized-sweater.jpg",
     },
   ]);
 
@@ -135,8 +129,7 @@ export default function ProductsPage() {
       price: parseFloat(productData.retailPrice) || 0,
       stock: parseInt(productData.quantity) || 0,
       rating: 4.0,
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "/images/products/1-classic-cotton-tshirt.jpg",
     };
 
     setProducts([...products, newProduct]);

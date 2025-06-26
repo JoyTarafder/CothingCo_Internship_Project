@@ -74,8 +74,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Redirect based on authentication state
   useEffect(() => {
     if (!isLoading) {
-      // If not logged in and not on login page, redirect to login
-      if (!user && pathname !== "/login") {
+      // Check if user is on a shop route (allow shop pages to handle their own auth)
+      const isShopRoute = pathname?.startsWith("/shop");
+
+      // If not logged in and not on login page or shop pages, redirect to login
+      if (!user && pathname !== "/login" && !isShopRoute) {
         showNotification(
           "warning",
           "Authentication required",
@@ -98,12 +101,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Only allow specific login credentials
-      if (email === "admin@gmail.com" && password === "Admin1234") {
+      // Accept both admin credentials and demo credentials
+      if (
+        (email === "admin@gmail.com" && password === "password") ||
+        (email === "user@example.com" && password === "password")
+      ) {
+        // Determine user role based on email
+        const isAdmin = email === "admin@gmail.com";
+
         const userData = {
           email,
-          name: "Admin User",
-          role: "admin",
+          name: isAdmin ? "Admin User" : "Demo User",
+          role: isAdmin ? "admin" : "user",
         };
 
         // Store user in local storage
@@ -114,14 +123,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         showNotification(
           "login",
           "Login successful",
-          "You are now logged in to the admin panel.",
+          `You are now logged in to the ${isAdmin ? "admin" : ""} panel.`,
           userData.name
         );
 
         return true;
       } else {
         // Show incorrect credentials notification
-        if (email === "admin@gmail.com") {
+        if (email === "admin@gmail.com" || email === "user@example.com") {
           showNotification(
             "error",
             "Incorrect password",
@@ -152,7 +161,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    router.push("/login");
+
+    // If user is on a shop route, redirect to shop page (which will show login)
+    // Otherwise redirect to admin login
+    const currentPath = window.location.pathname;
+    if (currentPath?.startsWith("/shop")) {
+      router.push("/shop");
+    } else {
+      router.push("/login");
+    }
   };
 
   return (

@@ -1,7 +1,10 @@
 import { AuthProvider } from "@/context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
 import { CategoriesProvider } from "@/context/CategoriesContext";
 import { NotificationProvider } from "@/context/NotificationContext";
+import { OrderProvider } from "@/context/OrderContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { WishlistProvider } from "@/context/WishlistContext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -9,7 +12,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Admin Panel",
+  title: "CLOTHINGCO",
   description: "Modern Admin Panel for your application",
 };
 
@@ -89,7 +92,13 @@ export default function RootLayout({
         <ThemeProvider>
           <NotificationProvider>
             <AuthProvider>
-              <CategoriesProvider>{children}</CategoriesProvider>
+              <CartProvider>
+                <OrderProvider>
+                  <WishlistProvider>
+                    <CategoriesProvider>{children}</CategoriesProvider>
+                  </WishlistProvider>
+                </OrderProvider>
+              </CartProvider>
             </AuthProvider>
           </NotificationProvider>
         </ThemeProvider>

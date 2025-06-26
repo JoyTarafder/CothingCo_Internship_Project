@@ -1,248 +1,324 @@
 "use client";
 
-import ThemeToggle from "@/components/ThemeToggle";
-import { AnimatePresence, motion } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
-  FiBell,
-  FiBox,
-  FiHome,
+  FiChevronDown,
+  FiLogOut,
   FiMenu,
   FiSearch,
   FiSettings,
-  FiShoppingCart,
-  FiSliders,
-  FiTag,
-  FiTruck,
+  FiShoppingBag,
   FiUser,
-  FiUsers,
   FiX,
 } from "react-icons/fi";
 
-type HeaderProps = {
-  title: string;
-};
+interface HeaderProps {
+  title?: string;
+}
 
-export default function Header({ title }: HeaderProps) {
-  const [searchFocused, setSearchFocused] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+export default function Header({ title }: HeaderProps = {}) {
+  const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
+  const router = useRouter();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const navItems = [
-    { name: "Dashboard", path: "/", icon: FiHome },
-    { name: "Order Management", path: "/orders", icon: FiShoppingCart },
-    { name: "Inventory", path: "/inventory", icon: FiBox },
-    { name: "Category Management", path: "/categories", icon: FiTag },
-    { name: "User Management", path: "/users", icon: FiUsers },
-    { name: "Vendor Management", path: "/vendors", icon: FiTruck },
-    { name: "Site Management", path: "/site", icon: FiSettings },
-    { name: "Settings", path: "/settings", icon: FiSliders },
+  // Handle scroll effect for header
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Handle search submission
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
+
+  const navigation = [
+    { name: "Dashboard", href: "/dashboard" },
+    { name: "Products", href: "/products" },
+    { name: "Categories", href: "/categories" },
+    { name: "Orders", href: "/orders" },
+    { name: "Customers", href: "/users" },
+    { name: "Analytics", href: "/analytics" },
   ];
 
-  // Animation variants for mobile menu
-  const menuVariants = {
-    hidden: {
-      opacity: 0,
-      y: -10,
-      height: 0,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      height: "auto",
-      transition: {
-        duration: 0.3,
-        staggerChildren: 0.05,
-        when: "beforeChildren",
-      },
-    },
-    exit: {
-      opacity: 0,
-      y: -10,
-      height: 0,
-      transition: {
-        duration: 0.2,
-        when: "afterChildren",
-        staggerChildren: 0.05,
-        staggerDirection: -1,
-      },
-    },
-  };
-
-  const menuItemVariants = {
-    hidden: { opacity: 0, x: -10 },
-    visible: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -10 },
-  };
-
   return (
-    <>
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="sticky top-0 z-20 flex items-center justify-between h-16 px-6 backdrop-blur-lg bg-white/80 dark:bg-gray-800/90 border-b border-gray-100/50 dark:border-gray-700/30 shadow-sm"
-      >
-        <div className="flex items-center space-x-4">
-          <motion.button
-            whileTap={{ scale: 0.92 }}
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200"
-            aria-label="Toggle mobile menu"
-          >
-            {showMobileMenu ? (
-              <FiX className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-            ) : (
-              <FiMenu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-            )}
-          </motion.button>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.3 }}
-            className="flex items-center"
-          >
-            <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 dark:from-white dark:via-gray-300 dark:to-white tracking-tight">
-              {title}
-            </h1>
-          </motion.div>
-        </div>
-
-        <div className="hidden md:flex items-center max-w-md w-96 mx-auto">
-          <motion.div
-            initial={{ width: "100%" }}
-            animate={{
-              width: searchFocused ? "120%" : "100%",
-              scale: searchFocused ? 1.02 : 1,
-            }}
-            transition={{ duration: 0.2 }}
-            className="relative w-full group"
-          >
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <FiSearch className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors duration-200" />
-            </div>
-            <input
-              type="search"
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-              className="bg-gray-50/50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600/50 text-gray-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 block w-full pl-10 p-2.5 transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
-              placeholder="Search anything..."
-            />
-          </motion.div>
-        </div>
-
-        <div className="flex items-center space-x-3">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors group"
-            aria-label="Notifications"
-          >
-            <FiBell className="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors duration-200" />
-            <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 20,
-                delay: 0.5,
-              }}
-              className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800"
-            />
-          </motion.button>
-
-          <ThemeToggle />
-
-          <div className="relative">
-            <Link href="/profile">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex items-center space-x-2 py-1.5 px-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600 group"
-                aria-label="User profile"
-              >
-                <motion.div
-                  whileHover={{ rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  className="h-8 w-8 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-all duration-200"
-                >
-                  <FiUser className="h-4 w-4" />
-                </motion.div>
-                <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200">
-                    Admin
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Administrator
-                  </p>
-                </div>
-              </motion.button>
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        isScrolled
+          ? "bg-white dark:bg-gray-900 shadow-md"
+          : "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link href="/dashboard" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-indigo-600 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-lg">A</span>
+              </div>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                AdminPanel
+              </span>
             </Link>
           </div>
-        </div>
-      </motion.header>
 
-      {/* Mobile Navigation Menu */}
-      <AnimatePresence>
-        {showMobileMenu && (
-          <motion.div
-            variants={menuVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="md:hidden fixed top-16 left-0 right-0 z-10 bg-white/95 dark:bg-gray-800/95 border-b border-gray-200/50 dark:border-gray-700/50 shadow-lg backdrop-blur-lg overflow-hidden"
-          >
-            <div className="py-3 px-4">
-              <div className="relative mb-4">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <FiSearch className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-6">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  pathname === item.href ||
+                  pathname?.startsWith(`${item.href}/`)
+                    ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                }`}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Right side actions */}
+          <div className="flex items-center space-x-4">
+            {/* Search button */}
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+              aria-label="Search"
+            >
+              <FiSearch className="w-5 h-5" />
+            </button>
+
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
+            >
+              {theme === "dark" ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                </svg>
+              )}
+            </button>
+
+            {/* User menu */}
+            <div className="relative">
+              <button
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center space-x-2 p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                aria-label="User menu"
+              >
+                <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                  <FiUser className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <input
-                  type="search"
-                  className="bg-gray-50/50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600/50 text-gray-900 dark:text-white text-sm rounded-xl block w-full pl-10 p-2.5 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-200"
-                  placeholder="Search..."
-                />
-              </div>
+                <span className="hidden lg:block text-sm font-medium">
+                  {user?.name || "Admin"}
+                </span>
+                <FiChevronDown className="hidden lg:block w-4 h-4" />
+              </button>
 
-              <nav className="space-y-1">
-                {navItems.map((item) => {
-                  const isActive = pathname === item.path;
-                  return (
-                    <motion.div
-                      key={item.path}
-                      variants={menuItemVariants}
-                      onClick={() => setShowMobileMenu(false)}
-                    >
-                      <Link
-                        href={item.path}
-                        className={`flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 ${
-                          isActive
-                            ? "bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 text-indigo-600 dark:text-indigo-400 font-medium"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
-                        }`}
-                      >
-                        <div
-                          className={`h-8 w-8 flex items-center justify-center rounded-lg mr-3 transition-colors duration-200 ${
-                            isActive
-                              ? "bg-indigo-100 dark:bg-indigo-800/40 text-indigo-600 dark:text-indigo-400"
-                              : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-                          }`}
-                        >
-                          <item.icon className="h-4 w-4" />
-                        </div>
-                        <span className="text-sm">{item.name}</span>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </nav>
+              {isUserMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                  <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      {user?.name || "Admin User"}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      {user?.email || "admin@example.com"}
+                    </p>
+                  </div>
+                  <Link
+                    href="/profile"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    <FiUser className="mr-3 h-4 w-4" />
+                    Your Profile
+                  </Link>
+                  <Link
+                    href="/settings"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    <FiSettings className="mr-3 h-4 w-4" />
+                    Settings
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <FiLogOut className="mr-3 h-4 w-4" />
+                    Sign out
+                  </button>
+                </div>
+              )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+              aria-label="Open menu"
+            >
+              {isMobileMenuOpen ? (
+                <FiX className="h-6 w-6" />
+              ) : (
+                <FiMenu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Search overlay */}
+      {isSearchOpen && (
+        <div className="absolute inset-0 z-50 bg-white dark:bg-gray-900 pt-16">
+          <div className="max-w-3xl mx-auto px-4 py-8">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Search
+              </h2>
+              <button
+                onClick={() => setIsSearchOpen(false)}
+                className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <FiX className="h-6 w-6" />
+              </button>
+            </div>
+            <form onSubmit={handleSearch} className="relative">
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search for products, categories, etc."
+                className="w-full bg-gray-100 dark:bg-gray-800 border-none rounded-lg py-4 pl-12 pr-4 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                autoFocus
+              />
+              <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+            </form>
+            <div className="mt-6">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+                Quick Links
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/products"
+                  className="flex items-center p-3 rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  onClick={() => setIsSearchOpen(false)}
+                >
+                  <FiShoppingBag className="mr-2 h-5 w-5 text-indigo-500" />
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    All Products
+                  </span>
+                </Link>
+                <Link
+                  href="/categories"
+                  className="flex items-center p-3 rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  onClick={() => setIsSearchOpen(false)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="mr-2 h-5 w-5 text-indigo-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                    />
+                  </svg>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    Categories
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-white dark:bg-gray-900 shadow-lg border-t dark:border-gray-800">
+          <nav className="px-2 pt-2 pb-3 space-y-1">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`block px-3 py-2 rounded-md text-base font-medium ${
+                  pathname === item.href ||
+                  pathname?.startsWith(`${item.href}/`)
+                    ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
+    </header>
   );
 }

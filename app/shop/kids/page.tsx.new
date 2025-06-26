@@ -1,0 +1,667 @@
+"use client";
+
+import CustomerLayout from "@/components/CustomerLayout";
+import ProductCard from "@/components/ProductCard";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import {
+  FiChevronRight,
+  FiGrid,
+  FiList,
+  FiShoppingBag,
+  FiSliders,
+  FiX,
+} from "react-icons/fi";
+
+// Mock product data for men's category
+const menProducts = [
+  {
+    id: "m1",
+    name: "Premium Wool Overcoat",
+    price: 3500,
+    image: "/images/products/m1-premium-wool-overcoat.jpg",
+    category: "Men",
+    rating: 4.9,
+    reviews: 132,
+    colors: ["#000000", "#8B4513", "#808080"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    isNew: true,
+  },
+  {
+    id: "m2",
+    name: "Slim Fit Dress Shirt",
+    price: 1200,
+    originalPrice: 1500,
+    image: "/images/products/m2-slim-fit-dress-shirt.jpg",
+    category: "Men",
+    rating: 4.7,
+    reviews: 98,
+    colors: ["#FFFFFF", "#87CEEB", "#000000", "#FFB6C1"],
+    sizes: ["S", "M", "L", "XL"],
+    isOnSale: true,
+  },
+  {
+    id: "m3",
+    name: "Tailored Suit Pants",
+    price: 1800,
+    image: "/images/products/m3-tailored-suit-pants.jpg",
+    category: "Men",
+    rating: 4.8,
+    reviews: 75,
+    colors: ["#000000", "#000080", "#808080"],
+    sizes: ["30", "32", "34", "36", "38"],
+  },
+  {
+    id: "m4",
+    name: "Cashmere Sweater",
+    price: 2200,
+    originalPrice: 2500,
+    image: "/images/products/m4-cashmere-sweater.jpg",
+    category: "Men",
+    rating: 4.9,
+    reviews: 112,
+    colors: ["#8B4513", "#000000", "#F5F5DC"],
+    sizes: ["S", "M", "L", "XL"],
+    isOnSale: true,
+  },
+  {
+    id: "m5",
+    name: "Leather Derby Shoes",
+    price: 2800,
+    image: "/images/products/m5-leather-derby-shoes.jpg",
+    category: "Men",
+    rating: 4.8,
+    reviews: 89,
+    colors: ["#000000", "#8B4513"],
+    sizes: ["40", "41", "42", "43", "44", "45"],
+    isNew: true,
+  },
+  {
+    id: "m6",
+    name: "Structured Blazer",
+    price: 2600,
+    image: "/images/products/m6-structured-blazer.jpg",
+    category: "Men",
+    rating: 4.7,
+    reviews: 64,
+    colors: ["#000080", "#000000", "#808080"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: "m7",
+    name: "Selvedge Denim Jeans",
+    price: 1600,
+    image: "/images/products/m7-selvedge-denim-jeans.jpg",
+    category: "Men",
+    rating: 4.8,
+    reviews: 103,
+    colors: ["#000080", "#000000"],
+    sizes: ["30", "32", "34", "36", "38"],
+  },
+  {
+    id: "m8",
+    name: "Merino Wool Scarf",
+    price: 800,
+    originalPrice: 950,
+    image: "/images/products/m8-merino-wool-scarf.jpg",
+    category: "Men",
+    rating: 4.6,
+    reviews: 47,
+    colors: ["#000000", "#8B4513", "#000080", "#808080"],
+    isOnSale: true,
+  },
+];
+
+// Featured collections
+const featuredCollections = [
+  {
+    name: "Formal Collection",
+    description: "Elevate your professional wardrobe",
+    image: "/images/collections/formal-collection.jpg",
+    link: "/shop/men/formal",
+  },
+  {
+    name: "Casual Collection",
+    description: "Everyday comfort with style",
+    image: "/images/collections/casual-collection.jpg",
+    link: "/shop/men/casual",
+  },
+];
+
+// Filter categories
+const categories = [
+  "All",
+  "Shirts",
+  "Pants",
+  "Suits",
+  "Outerwear",
+  "Shoes",
+  "Accessories",
+];
+
+// Size options
+const sizeOptions = ["S", "M", "L", "XL", "XXL"];
+
+// Color options
+const colorOptions = [
+  { name: "Black", value: "#000000" },
+  { name: "White", value: "#FFFFFF" },
+  { name: "Navy", value: "#000080" },
+  { name: "Gray", value: "#808080" },
+  { name: "Brown", value: "#8B4513" },
+  { name: "Beige", value: "#F5F5DC" },
+  { name: "Blue", value: "#87CEEB" },
+];
+
+// Price ranges
+const priceRanges = [
+  { name: "Under ৳1000", range: [0, 1000] },
+  { name: "৳1000 - ৳2000", range: [1000, 2000] },
+  { name: "৳2000 - ৳3000", range: [2000, 3000] },
+  { name: "Over ৳3000", range: [3000, Infinity] },
+];
+
+export default function MenPage() {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeFilters, setActiveFilters] = useState({
+    sizes: [] as string[],
+    colors: [] as string[],
+    priceRange: null as number[] | null,
+  });
+  const [isSticky, setIsSticky] = useState(false);
+
+  // Handle sticky category navigation on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const categoryNav = document.getElementById("category-nav");
+      if (categoryNav) {
+        const sticky = categoryNav.offsetTop;
+        if (window.pageYOffset > sticky) {
+          setIsSticky(true);
+        } else {
+          setIsSticky(false);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const toggleSizeFilter = (size: string) => {
+    setActiveFilters((prev) => {
+      const sizes = prev.sizes.includes(size)
+        ? prev.sizes.filter((s) => s !== size)
+        : [...prev.sizes, size];
+      return { ...prev, sizes };
+    });
+  };
+
+  const toggleColorFilter = (color: string) => {
+    setActiveFilters((prev) => {
+      const colors = prev.colors.includes(color)
+        ? prev.colors.filter((c) => c !== color)
+        : [...prev.colors, color];
+      return { ...prev, colors };
+    });
+  };
+
+  const setPriceRange = (range: number[] | null) => {
+    setActiveFilters((prev) => ({ ...prev, priceRange: range }));
+  };
+
+  // Filter products based on active filters
+  const filteredProducts = menProducts.filter((product) => {
+    // Filter by category
+    if (
+      activeCategory !== "All" &&
+      !product.category.includes(activeCategory)
+    ) {
+      return false;
+    }
+
+    // Filter by size
+    if (
+      activeFilters.sizes.length > 0 &&
+      !activeFilters.sizes.some((size) => product.sizes?.includes(size))
+    ) {
+      return false;
+    }
+
+    // Filter by color
+    if (
+      activeFilters.colors.length > 0 &&
+      !activeFilters.colors.some((color) => product.colors?.includes(color))
+    ) {
+      return false;
+    }
+
+    // Filter by price range
+    if (
+      activeFilters.priceRange &&
+      (product.price < activeFilters.priceRange[0] ||
+        product.price > activeFilters.priceRange[1])
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
+  return (
+    <CustomerLayout>
+      {/* Hero Banner with Parallax Effect */}
+      <div className="relative h-[60vh] lg:h-[70vh] bg-black text-white overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center transform scale-110"
+          style={{
+            backgroundImage: `url(https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)`,
+            backgroundAttachment: "fixed",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40"></div>
+        </div>
+
+        <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
+          <div className="max-w-3xl space-y-6">
+            <div className="inline-block animate-slide-up">
+              <span className="border border-white text-white px-4 py-2 text-sm uppercase tracking-widest font-light">
+                New Collection 2025
+              </span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-light uppercase tracking-wider animate-text-reveal">
+              <span className="block">Men's</span>
+              <span className="block text-yellow-400">Collection</span>
+            </h1>
+            <p className="text-xl text-gray-300 font-light max-w-xl animate-fade-in-delay">
+              Discover our premium selection of men's clothing designed with
+              clean lines, exceptional materials, and timeless style.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-delay-2">
+              <Link
+                href="#shop-now"
+                className="group bg-white text-black px-8 py-3 font-light uppercase tracking-widest text-sm hover:bg-yellow-400 transition-all duration-300 flex items-center justify-center"
+              >
+                Shop Now
+                <FiChevronRight className="ml-2 transform group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                href="#collections"
+                className="border border-white text-white px-8 py-3 font-light uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center"
+              >
+                View Collections
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Featured Collections Section */}
+      <section id="collections" className="py-16 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-light uppercase tracking-wider text-gray-900 dark:text-white mb-4">
+              Featured Collections
+            </h2>
+            <div className="w-24 h-1 bg-yellow-400 mx-auto"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {featuredCollections.map((collection) => (
+              <Link
+                key={collection.name}
+                href={collection.link}
+                className="group relative overflow-hidden rounded-lg aspect-[16/9]"
+              >
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300 z-10"></div>
+                <Image
+                  src={collection.image}
+                  alt={collection.name}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
+                  <h3 className="text-2xl font-medium text-white mb-2">
+                    {collection.name}
+                  </h3>
+                  <p className="text-gray-200 mb-4">{collection.description}</p>
+                  <span className="inline-flex items-center text-white text-sm uppercase tracking-wider font-light group-hover:translate-x-2 transition-transform duration-300">
+                    Explore Collection <FiChevronRight className="ml-2" />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Main Shopping Section */}
+      <section id="shop-now" className="py-16 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Category Navigation */}
+          <div
+            id="category-nav"
+            className={`mb-8 ${
+              isSticky
+                ? "sticky top-20 z-30 bg-gray-50 dark:bg-gray-800 py-4 shadow-md"
+                : ""
+            }`}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-light text-gray-900 dark:text-white">
+                Men's Clothing
+              </h2>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setIsFilterOpen(true)}
+                  className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-md hover:bg-yellow-500 hover:text-black transition-colors duration-300"
+                >
+                  <FiSliders className="w-4 h-4" />
+                  <span className="text-sm uppercase tracking-wider">
+                    Filters
+                  </span>
+                </button>
+                <div className="hidden md:flex items-center space-x-4">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    View:
+                  </span>
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-1 ${
+                      viewMode === "grid"
+                        ? "text-yellow-500"
+                        : "text-gray-400 hover:text-black dark:hover:text-white"
+                    }`}
+                  >
+                    <FiGrid className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-1 ${
+                      viewMode === "list"
+                        ? "text-yellow-500"
+                        : "text-gray-400 hover:text-black dark:hover:text-white"
+                    }`}
+                  >
+                    <FiList className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Category Pills */}
+            <div className="overflow-x-auto pb-2 scrollbar-hide">
+              <div className="flex space-x-2">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`px-6 py-3 whitespace-nowrap text-sm uppercase tracking-wider rounded-full transition-all duration-300 ${
+                      activeCategory === category
+                        ? "bg-black text-white dark:bg-white dark:text-black"
+                        : "bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Products Grid */}
+          <div
+            className={`grid gap-6 ${
+              viewMode === "grid"
+                ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                : "grid-cols-1"
+            }`}
+          >
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                variant={viewMode === "list" ? "featured" : "default"}
+              />
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {filteredProducts.length === 0 && (
+            <div className="py-16 text-center">
+              <div className="inline-block p-6 rounded-full bg-gray-100 dark:bg-gray-700 mb-6">
+                <FiShoppingBag className="w-10 h-10 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
+                No products found
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">
+                Try adjusting your filters or browse our other categories
+              </p>
+              <button
+                onClick={() => {
+                  setActiveCategory("All");
+                  setActiveFilters({
+                    sizes: [],
+                    colors: [],
+                    priceRange: null,
+                  });
+                }}
+                className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-md hover:bg-yellow-500 hover:text-black transition-colors duration-300"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Filter Sidebar */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
+          isFilterOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsFilterOpen(false)}
+      >
+        <div
+          className={`absolute top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ${
+            isFilterOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                Filters
+              </h3>
+              <button
+                onClick={() => setIsFilterOpen(false)}
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                <FiX className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              </button>
+            </div>
+
+            {/* Size Filter */}
+            <div className="mb-8">
+              <h4 className="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+                Size
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {sizeOptions.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => toggleSizeFilter(size)}
+                    className={`px-3 py-2 text-sm border rounded-md transition-colors ${
+                      activeFilters.sizes.includes(size)
+                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white"
+                        : "border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Color Filter */}
+            <div className="mb-8">
+              <h4 className="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+                Color
+              </h4>
+              <div className="flex flex-wrap gap-3">
+                {colorOptions.map((color) => (
+                  <button
+                    key={color.name}
+                    onClick={() => toggleColorFilter(color.value)}
+                    className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                      activeFilters.colors.includes(color.value)
+                        ? "border-black dark:border-white scale-110"
+                        : "border-transparent hover:scale-110"
+                    }`}
+                    style={{ backgroundColor: color.value }}
+                    title={color.name}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Price Range Filter */}
+            <div className="mb-8">
+              <h4 className="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+                Price Range
+              </h4>
+              <div className="space-y-2">
+                {priceRanges.map((range) => (
+                  <button
+                    key={range.name}
+                    onClick={() =>
+                      setPriceRange(
+                        activeFilters.priceRange === range.range
+                          ? null
+                          : range.range
+                      )
+                    }
+                    className={`flex items-center w-full px-3 py-2 text-sm text-left rounded-md transition-colors ${
+                      activeFilters.priceRange === range.range
+                        ? "bg-black text-white dark:bg-white dark:text-black"
+                        : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    {range.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Apply and Clear Buttons */}
+            <div className="flex gap-4 mt-8">
+              <button
+                onClick={() => {
+                  setActiveFilters({
+                    sizes: [],
+                    colors: [],
+                    priceRange: null,
+                  });
+                }}
+                className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                Clear All
+              </button>
+              <button
+                onClick={() => setIsFilterOpen(false)}
+                className="flex-1 px-4 py-3 bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-yellow-500 hover:text-black transition-colors"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Style Guide Section */}
+      <section className="py-16 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-light uppercase tracking-wider text-gray-900 dark:text-white mb-6">
+                Men's Style Guide
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-8">
+                Our curated collection of men's clothing is designed to help you
+                build a versatile wardrobe that transitions effortlessly from
+                day to night, work to weekend. Each piece is crafted with
+                attention to detail and quality materials.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-yellow-400 flex items-center justify-center text-black font-medium mr-3 mt-0.5">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-1">
+                      Quality Materials
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      We source the finest fabrics and materials to ensure
+                      comfort and durability.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-yellow-400 flex items-center justify-center text-black font-medium mr-3 mt-0.5">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-1">
+                      Timeless Design
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Our designs focus on classic silhouettes that remain
+                      stylish season after season.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-yellow-400 flex items-center justify-center text-black font-medium mr-3 mt-0.5">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-1">
+                      Versatile Styling
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Each piece is designed to be mixed and matched for maximum
+                      versatility.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <Link
+                href="/shop/men/style-guide"
+                className="inline-flex items-center mt-8 text-black dark:text-white hover:text-yellow-500 dark:hover:text-yellow-500 font-medium"
+              >
+                Read Full Style Guide
+                <FiChevronRight className="ml-2" />
+              </Link>
+            </div>
+            <div className="relative h-96 md:h-[500px]">
+              <Image
+                src="https://images.unsplash.com/photo-1617137968427-85924c800a22?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
+                alt="Men's Style Guide"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </CustomerLayout>
+  );
+}

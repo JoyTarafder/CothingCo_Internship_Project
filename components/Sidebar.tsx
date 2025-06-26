@@ -24,7 +24,7 @@ export default function Sidebar() {
   const { showNotification } = useNotification();
 
   const navItems = [
-    { name: "Dashboard", path: "/", icon: FiHome },
+    { name: "Dashboard", path: "/dashboard", icon: FiHome },
     { name: "Order Management", path: "/orders", icon: FiShoppingCart },
     { name: "Inventory", path: "/inventory", icon: FiBox },
     { name: "Analytics", path: "/analytics", icon: FiBarChart2 },

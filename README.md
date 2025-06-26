@@ -81,10 +81,28 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Default Login Credentials
+### Application Access
 
-- **Email**: admin@gmail.com
-- **Password**: Admin1234
+**Admin Panel:**
+
+- URL: [http://localhost:3000](http://localhost:3000)
+- Email: admin@gmail.com
+- Password: Admin1234
+
+**Customer Shop:**
+
+- URL: [http://localhost:3000/shop](http://localhost:3000/shop)
+- Customer registration available at `/shop/signup`
+- Guest checkout available without registration
+
+### Shop Demo Features
+
+- Browse products by category (Men, Women, Kids)
+- Add products to cart and wishlist
+- Complete checkout process with mock payment
+- Create customer account and view order history
+- Use promo codes: `WELCOME100`, `SAVE20`, `FREESHIP`
+- Test responsive design on mobile and tablet devices
 
 ## Installation Troubleshooting
 
@@ -185,6 +203,147 @@ For traditional hosting environments:
 - **Protected Routes**: Route guards for authenticated content
 - **Role-Based Access**: Different views based on user role
 
+## Shop Section (/shop)
+
+The `/shop` directory contains a complete e-commerce customer portal with modern shopping functionality:
+
+### Shop Features
+
+- **Homepage & Collections** - Featured products, trending items, and curated collections
+- **Product Catalog** - Category-based browsing (Men, Women, Kids) with filtering and search
+- **Product Details** - Comprehensive product pages with image galleries, reviews, and specifications
+- **Shopping Cart** - Full cart management with quantity updates, promo codes, and price calculations
+- **Checkout Process** - Multi-step checkout with shipping, payment, and order review
+- **User Account** - Customer profile, order history, wishlist, and address management
+- **Authentication** - Login/signup functionality with session management
+- **Responsive Design** - Mobile-first design optimized for all devices
+
+### Shop Structure
+
+```
+├── app/shop/
+│   ├── page.tsx                    # Main shop homepage
+│   ├── men/                        # Men's product category
+│   │   └── page.tsx               # Men's collection page
+│   ├── women/                      # Women's product category
+│   │   └── page.tsx               # Women's collection page
+│   ├── kids/                       # Kids' product category
+│   │   └── page.tsx               # Kids' collection page
+│   ├── products/
+│   │   └── [id]/                   # Dynamic product detail pages
+│   │       └── page.tsx           # Individual product view
+│   ├── cart/
+│   │   ├── page.tsx               # Shopping cart page
+│   │   └── checkout/              # Checkout process
+│   │       └── page.tsx          # Checkout form
+│   ├── account/
+│   │   ├── page.tsx               # Customer account dashboard
+│   │   └── orders/                # Order management
+│   │       ├── page.tsx          # Order history
+│   │       └── [id]/             # Individual order details
+│   │           └── page.tsx
+│   ├── wishlist/                   # Wishlist management
+│   │   └── page.tsx
+│   ├── about/                      # Company information
+│   ├── contact/                    # Contact page
+│   ├── helpcenter/                # Customer support
+│   ├── trackorder/                # Order tracking
+│   ├── returnexchange/            # Returns & exchanges
+│   ├── shippinginfo/              # Shipping information
+│   ├── storelocations/            # Store finder
+│   ├── careers/                   # Job listings
+│   ├── login/                     # Customer authentication
+│   ├── signup/                    # Customer registration
+│   ├── terms/                     # Terms & conditions
+│   ├── privacy/                   # Privacy policy
+│   ├── cookies/                   # Cookie policy
+│   └── accessibility/             # Accessibility statement
+```
+
+### Key Shop Components
+
+- **CustomerLayout**: Main layout wrapper for customer-facing pages with navigation and footer
+- **ProductCard**: Reusable product display component with ratings, pricing, and quick actions
+- **WishlistModal**: Modal for managing customer wishlist items
+- **PromoCodeInput**: Component for applying promotional discounts
+
+### Shopping Cart Features
+
+- Add/remove products with size and color selection
+- Quantity management with stock validation
+- Promo code application with discount calculation
+- Shipping calculation based on location and method
+- Persistent cart state across sessions
+- Mobile-optimized interface
+
+### Checkout Process
+
+1. **Shipping Information**: Customer details and delivery address
+2. **Payment Method**: Card payments, mobile banking, and cash on delivery
+3. **Order Review**: Final order confirmation with terms acceptance
+4. **Order Confirmation**: Receipt and tracking information
+
+### Payment & Shipping Options
+
+**Payment Methods:**
+
+- Credit/Debit Cards (Visa, MasterCard, American Express)
+- Mobile Banking (bKash, Rocket, Nagad)
+- Cash on Delivery (COD) with additional fees
+- Digital Wallets and online banking
+
+**Shipping Methods:**
+
+- Standard Shipping (5-7 business days) - Free over ৳2000
+- Express Shipping (2-3 business days) - ৳150-250
+- Overnight Delivery (Next business day) - ৳500
+- Store Pickup (Ready in 2-4 hours) - Free
+
+**Additional Features:**
+
+- Gift wrapping options with custom messages
+- Order tracking with real-time updates
+- Email notifications for order status changes
+- Return and exchange policies with easy process
+
+### Customer Account Features
+
+- Personal profile management
+- Order history with detailed tracking
+- Wishlist management
+- Saved addresses
+- Account statistics and lifetime spending
+- VIP membership status
+
+### Shop Context Providers
+
+The shop functionality is powered by several React Context providers:
+
+- **CartContext**: Manages shopping cart state, quantities, pricing, and promo codes
+- **WishlistContext**: Handles wishlist items and favorites functionality
+- **AuthContext**: Customer authentication and session management
+- **OrderContext**: Order processing and history management
+- **NotificationContext**: Toast notifications for user feedback
+- **ThemeContext**: Dark/light mode toggle for customer interface
+
+### Shop Navigation & Layout
+
+- **Responsive Header**: Logo, main navigation, search, cart, and user menu
+- **Category Navigation**: Dropdown menus for Men's, Women's, and Kids' sections
+- **Footer**: Links to support pages, company info, and social media
+- **Mobile Navigation**: Collapsible mobile menu with full functionality
+- **Search Functionality**: Global search across all products
+- **Breadcrumb Navigation**: Clear page hierarchy and navigation paths
+
+### Product Management
+
+- **Dynamic Product Pages**: Individual product pages with full details
+- **Image Galleries**: Multiple product images with zoom functionality
+- **Product Variants**: Size and color selection with availability status
+- **Reviews & Ratings**: Customer feedback and star ratings
+- **Related Products**: Recommended items based on category and preferences
+- **Stock Management**: Real-time inventory tracking and availability
+
 ## Project Structure
 
 ```
@@ -198,6 +357,7 @@ For traditional hosting environments:
 │   ├── products/         # Product management
 │   ├── profile/          # User profile settings
 │   ├── settings/         # Application settings
+│   └── shop/            # Complete e-commerce customer portal
 │   ├── site/             # Site management
 │   ├── users/            # User management
 │   ├── vendors/          # Vendor management

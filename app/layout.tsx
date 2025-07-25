@@ -6,10 +6,10 @@ import { OrderProvider } from "@/context/OrderContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+// Use system fonts as fallback to avoid Google Fonts connectivity issues
+const fontClass = "font-sans"; // Tailwind's default sans font stack
 
 export const metadata: Metadata = {
   title: "CLOTHINGCO",
@@ -88,7 +88,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={getInitialProps()} />
         <script dangerouslySetInnerHTML={getThemeScript()} />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={fontClass} suppressHydrationWarning>
         <ThemeProvider>
           <NotificationProvider>
             <AuthProvider>

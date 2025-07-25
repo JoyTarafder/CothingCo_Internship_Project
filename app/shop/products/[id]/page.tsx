@@ -284,9 +284,9 @@ export default function ProductDetailPage() {
     // Get product data based on ID
     if (typeof productId === "string" && productId in productsDatabase) {
       // Use type assertion to tell TypeScript that the key exists
-      const productId = productId as keyof typeof productsDatabase;
-      setProduct(productsDatabase[productId]);
-      setSelectedColor(productsDatabase[productId].colors[0]);
+      const validProductId = productId as keyof typeof productsDatabase;
+      setProduct(productsDatabase[validProductId]);
+      setSelectedColor(productsDatabase[validProductId].colors[0]);
       setSelectedSize("");
     }
   }, [productId]);
@@ -298,6 +298,11 @@ export default function ProductDetailPage() {
     : 0;
 
   const handleAddToCart = () => {
+    if (!product) {
+      alert("Product not found");
+      return;
+    }
+
     if (!selectedSize) {
       alert("Please select a size");
       return;
@@ -373,8 +378,8 @@ export default function ProductDetailPage() {
             {/* Main Image */}
             <div className="aspect-square bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
               <Image
-                src={product?.images[selectedImage]}
-                alt={product?.name}
+                src={product?.images?.[selectedImage] || "/images/placeholder.jpg"}
+                alt={product?.name || "Product image"}
                 width={600}
                 height={600}
                 className="w-full h-full object-cover"
@@ -432,7 +437,7 @@ export default function ProductDetailPage() {
                     <FiStar
                       key={i}
                       className={`w-4 h-4 ${
-                        i < Math.floor(product?.rating)
+                        i < Math.floor(product?.rating || 0)
                           ? "fill-yellow-400 text-yellow-400"
                           : "text-gray-300"
                       }`}
@@ -560,17 +565,17 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleToggleWishlist}
                 className={`w-full border py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 ${
-                  isInWishlist(product?.id)
+                  isInWishlist(product?.id || "")
                     ? "bg-red-50 border-red-200 text-red-600 dark:bg-red-900 dark:border-red-700 dark:text-red-400"
                     : "border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
               >
                 <FiHeart
                   className={`w-5 h-5 ${
-                    isInWishlist(product?.id) ? "fill-current" : ""
+                    isInWishlist(product?.id || "") ? "fill-current" : ""
                   }`}
                 />
-                {isInWishlist(product?.id)
+                {isInWishlist(product?.id || "")
                   ? "Remove from Wishlist"
                   : "Add to Wishlist"}
               </button>
@@ -672,7 +677,7 @@ export default function ProductDetailPage() {
                         <FiStar
                           key={i}
                           className={`w-5 h-5 ${
-                            i < Math.floor(product?.rating)
+                            i < Math.floor(product?.rating || 0)
                               ? "fill-yellow-400 text-yellow-400"
                               : "text-gray-300"
                           }`}

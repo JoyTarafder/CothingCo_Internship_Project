@@ -105,15 +105,15 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   };
 
   if (fill) {
-    return <Image {...imageProps} fill />;
+    return <Image {...imageProps} alt={alt} fill />;
   }
 
   if (width && height) {
-    return <Image {...imageProps} width={width} height={height} />;
+    return <Image {...imageProps} alt={alt} width={width} height={height} />;
   }
 
   // Default fallback
-  return <Image {...imageProps} width={400} height={400} />;
+  return <Image {...imageProps} alt={alt} width={400} height={400} />;
 };
 
 export default OptimizedImage;

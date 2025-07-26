@@ -28,23 +28,23 @@ A comprehensive, feature-rich admin panel built with Next.js 15, TypeScript, and
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (React 19)
-- **Language**: TypeScript 5.8
-- **Styling**: Tailwind CSS 3.3
+- **Framework**: Next.js 15.3.4 (React 19.1.0)
+- **Language**: TypeScript 5.8.3
+- **Styling**: Tailwind CSS 3.3.0
 - **State Management**: React Context API
 - **Charts & Visualizations**:
-  - Chart.js 4.4
-  - React Chart.js 2 (5.3)
-  - Recharts 2.15
-- **Animations**: Framer Motion 12.6
-- **Icons**: React Icons 5.5
+  - Chart.js 4.4.8
+  - React Chart.js 2 (5.3.0)
+  - Recharts 3.0.0
+- **Animations**: Framer Motion 12.19.1
+- **Icons**: React Icons 5.5.0
 - **PDF Generation**:
-  - jsPDF 3.0
-  - jsPDF-AutoTable 5.0
+  - jsPDF 3.0.1
+  - jsPDF-AutoTable 5.0.2
 - **Development Tools**:
-  - ESLint 9
-  - Turbo 2.0
-  - Concurrently 8.2
+  - ESLint 9.24.0
+  - Turbo 2.0.0
+  - Concurrently 8.2.2
 - **Form Handling**: Native React forms with custom validation
 - **Data Fetching**: Next.js App Router with React Server Components
 - **Authentication**: JWT-based authentication system
@@ -86,6 +86,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 **Admin Panel:**
 
 - URL: [http://localhost:3000](http://localhost:3000)
+- Admin Login: [http://localhost:3000/login](http://localhost:3000/login)
 - Email: admin@gmail.com
 - Password: Admin1234
 
@@ -93,6 +94,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - URL: [http://localhost:3000/shop](http://localhost:3000/shop)
 - Customer registration available at `/shop/signup`
+- Customer login available via the main navigation
 - Guest checkout available without registration
 
 ### Shop Demo Features
@@ -252,12 +254,13 @@ The `/shop` directory contains a complete e-commerce customer portal with modern
 │   ├── shippinginfo/              # Shipping information
 │   ├── storelocations/            # Store finder
 │   ├── careers/                   # Job listings
-│   ├── login/                     # Customer authentication
 │   ├── signup/                    # Customer registration
 │   ├── terms/                     # Terms & conditions
 │   ├── privacy/                   # Privacy policy
 │   ├── cookies/                   # Cookie policy
-│   └── accessibility/             # Accessibility statement
+│   ├── accessibility/             # Accessibility statement
+│   ├── ourresponsibility/         # Corporate responsibility
+│   └── promo-demo/                # Promotional demos
 ```
 
 ### Key Shop Components
@@ -266,6 +269,7 @@ The `/shop` directory contains a complete e-commerce customer portal with modern
 - **ProductCard**: Reusable product display component with ratings, pricing, and quick actions
 - **WishlistModal**: Modal for managing customer wishlist items
 - **PromoCodeInput**: Component for applying promotional discounts
+- **OptimizedImage**: Performance-optimized image component for product displays
 
 ### Shopping Cart Features
 
@@ -325,6 +329,7 @@ The shop functionality is powered by several React Context providers:
 - **OrderContext**: Order processing and history management
 - **NotificationContext**: Toast notifications for user feedback
 - **ThemeContext**: Dark/light mode toggle for customer interface
+- **CategoriesContext**: Product categories and classification management
 
 ### Shop Navigation & Layout
 
@@ -365,37 +370,39 @@ The shop functionality is powered by several React Context providers:
 │   ├── layout.tsx        # Root layout
 │   └── page.tsx          # Homepage
 ├── components/           # Reusable components
-│   ├── AddCategoryModal.tsx  # Category creation modal
-│   ├── AddProductModal.tsx   # Product creation modal
-│   ├── Chart.tsx         # Data visualization
-│   ├── DashboardCard.tsx # UI card component
-│   ├── DashboardLayout.tsx   # Layout structure
-│   ├── DashboardStatsGrid.tsx # Statistics display
+│   ├── AddCategoryModal.tsx      # Category creation modal
+│   ├── AddProductModal.tsx       # Product creation modal
+│   ├── Chart.tsx                 # Data visualization
+│   ├── CustomerLayout.tsx        # Customer-facing layout wrapper
+│   ├── DashboardCard.tsx         # UI card component
+│   ├── DashboardLayout.tsx       # Admin layout structure
+│   ├── DashboardStatsGrid.tsx    # Statistics display
 │   ├── DeleteConfirmationModal.tsx # Deletion confirmation
-│   ├── EditCategoryModal.tsx # Category editing
-│   ├── Header.tsx        # App header with navigation
-│   ├── Sidebar.tsx       # Navigation sidebar
-│   ├── StatsOverview.tsx # Statistical overview display
-│   └── ThemeToggle.tsx   # Dark/light mode toggle
+│   ├── EditCategoryModal.tsx     # Category editing
+│   ├── Header.tsx                # App header with navigation
+│   ├── OptimizedImage.tsx        # Optimized image component
+│   ├── ProductCard.tsx           # Product display component
+│   ├── PromoCodeInput.tsx        # Promo code application
+│   ├── Sidebar.tsx               # Navigation sidebar
+│   ├── StatsOverview.tsx         # Statistical overview display
+│   ├── ThemeToggle.tsx           # Dark/light mode toggle
+│   └── WishlistModal.tsx         # Wishlist management modal
 ├── context/              # React Context providers
-│   ├── AuthContext.tsx   # Authentication context
-│   ├── ThemeContext.tsx  # Theme management context
-│   └── SidebarContext.tsx # Sidebar state management
+│   ├── AuthContext.tsx           # Authentication context
+│   ├── CartContext.tsx           # Shopping cart state management
+│   ├── CategoriesContext.tsx     # Product categories management
+│   ├── NotificationContext.tsx   # Toast notifications
+│   ├── OrderContext.tsx          # Order processing and history
+│   ├── ThemeContext.tsx          # Theme management context
+│   └── WishlistContext.tsx       # Wishlist functionality
 ├── pages/                # Additional pages (if using Pages Router alongside App Router)
 ├── public/               # Static assets
 │   ├── images/           # Image assets
-│   ├── icons/            # Icon assets
-│   └── dashboard-preview.png # Dashboard preview image
-├── styles/               # Additional styles (if needed beyond globals.css)
-├── types/                # TypeScript type definitions
-├── utils/                # Utility functions
-│   ├── api.ts            # API utility functions
-│   ├── auth.ts           # Authentication utilities
-│   ├── date.ts           # Date formatting utilities
-│   └── formatting.ts     # Text/number formatting utilities
+│   ├── banners/          # Banner images
+│   └── ...               # Other static assets
+├── scripts/              # Build and utility scripts
 ├── next.config.mjs       # Next.js configuration
 ├── tailwind.config.ts    # Tailwind CSS configuration
-├── tailwind.config.js    # Alternative Tailwind config
 ├── tsconfig.json         # TypeScript configuration
 └── package.json          # Dependencies and scripts
 ```

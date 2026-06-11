@@ -48,24 +48,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Check for existing session on component mount
   useEffect(() => {
     const checkAuth = () => {
-      // In a real app, you would verify the session token with your backend
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          showNotification(
-            "login",
-            "Welcome back",
-            `Session restored. You've been automatically logged in.`,
-            parsedUser.name
-          );
-        } catch (error) {
-          console.error("Failed to parse stored user", error);
-          localStorage.removeItem("user");
+      try {
+        // In a real app, you would verify the session token with your backend
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          try {
+            const parsedUser = JSON.parse(storedUser);
+            // Validate user object structure
+            if (parsedUser && typeof parsedUser === "object" && parsedUser.email && parsedUser.name && parsedUser.role) {
+              setUser(parsedUser);
+              showNotification(
+                "login",
+                "Welcome back",
+                `Session restored. You've been automatically logged in.`,
+                parsedUser.name
+              );
+            } else {
+              // Invalid user object, clear it
+              localStorage.removeItem("user");
+            }
+          } catch (error) {
+            console.error("Failed to parse stored user", error);
+            localStorage.removeItem("user");
+          }
         }
+      } catch (error) {
+        console.error("Failed to check authentication", error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     checkAuth();
@@ -98,19 +109,42 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       setIsLoading(true);
 
+      // Sanitize and validate inputs
+      const sanitizedEmail = email.trim().toLowerCase();
+      const sanitizedPassword = password.trim();
+
+      // Validate input lengths to prevent abuse
+      if (sanitizedEmail.length === 0 || sanitizedEmail.length > 254) {
+        showNotification(
+          "error",
+          "Invalid email",
+          "Email length is invalid."
+        );
+        return false;
+      }
+
+      if (sanitizedPassword.length === 0 || sanitizedPassword.length > 128) {
+        showNotification(
+          "error",
+          "Invalid password",
+          "Password length is invalid."
+        );
+        return false;
+      }
+
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Accept both admin credentials and demo credentials
       if (
-        (email === "admin@gmail.com" && password === "password") ||
-        (email === "user@example.com" && password === "password")
+        (sanitizedEmail === "admin@gmail.com" && sanitizedPassword === "password") ||
+        (sanitizedEmail === "user@example.com" && sanitizedPassword === "password")
       ) {
         // Determine user role based on email
-        const isAdmin = email === "admin@gmail.com";
+        const isAdmin = sanitizedEmail === "admin@gmail.com";
 
         const userData = {
-          email,
+          email: sanitizedEmail,
           name: isAdmin ? "Admin User" : "Demo User",
           role: isAdmin ? "admin" : "user",
         };
@@ -130,7 +164,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return true;
       } else {
         // Show incorrect credentials notification
-        if (email === "admin@gmail.com" || email === "user@example.com") {
+        if (sanitizedEmail === "admin@gmail.com" || sanitizedEmail === "user@example.com") {
           showNotification(
             "error",
             "Incorrect password",
@@ -164,10 +198,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // If user is on a shop route, redirect to shop page (which will show login)
     // Otherwise redirect to admin login
-    const currentPath = window.location.pathname;
-    if (currentPath?.startsWith("/shop")) {
-      router.push("/shop");
-    } else {
+    try {
+      const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
+      if (currentPath?.startsWith("/shop")) {
+        router.push("/shop");
+      } else {
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Logout redirect error:", error);
       router.push("/login");
     }
   };

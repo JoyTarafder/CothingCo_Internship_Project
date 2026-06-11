@@ -28,19 +28,28 @@ export default function LoginPage() {
     let valid = true;
     const newErrors = { email: "", password: "" };
 
-    if (!email) {
+    const sanitizedEmail = email.trim();
+    const sanitizedPassword = password.trim();
+
+    if (!sanitizedEmail) {
       newErrors.email = "Email is required";
       valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitizedEmail)) {
       newErrors.email = "Email is invalid";
+      valid = false;
+    } else if (sanitizedEmail.length > 254) {
+      newErrors.email = "Email is too long";
       valid = false;
     }
 
-    if (!password) {
+    if (!sanitizedPassword) {
       newErrors.password = "Password is required";
       valid = false;
-    } else if (password.length < 6) {
+    } else if (sanitizedPassword.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
+      valid = false;
+    } else if (sanitizedPassword.length > 128) {
+      newErrors.password = "Password is too long";
       valid = false;
     }
 
@@ -57,7 +66,11 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const success = await login(email, password);
+      // Use trimmed credentials for login
+      const sanitizedEmail = email.trim().toLowerCase();
+      const sanitizedPassword = password.trim();
+
+      const success = await login(sanitizedEmail, sanitizedPassword);
 
       if (!success) {
         setLoginError("Invalid email or password");

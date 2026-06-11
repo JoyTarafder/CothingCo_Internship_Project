@@ -106,6 +106,11 @@ const nextConfig = {
   // Add redirects for problematic external images to fallbacks
   async redirects() {
     return [
+      {
+        source: "/adminpanel",
+        destination: "/dashboard",
+        permanent: true,
+      },
       // Redirect problematic external image requests to local fallbacks in development
       ...(process.env.NODE_ENV === "development"
         ? [

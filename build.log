@@ -1,0 +1,80 @@
+
+> admin-panel@1.0.0 build
+> next build
+
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   ▲ Next.js 15.3.4
+
+   Creating an optimized production build ...
+Browserslist: browsers data (caniuse-lite) is 13 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ✓ Compiled successfully in 14.0s
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/40) ...
+   Generating static pages (10/40) 
+   Generating static pages (20/40) 
+   Generating static pages (30/40) 
+ ✓ Generating static pages (40/40)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                    Size  First Load JS
+┌ ○ /                                       4.26 kB         178 kB
+├ ○ /_not-found                               149 B         102 kB
+├ ○ /analytics                              4.37 kB         234 kB
+├ ○ /categories                             5.88 kB         167 kB
+├ ƒ /categories/[id]                        2.88 kB         164 kB
+├ ○ /dashboard                              4.59 kB         226 kB
+├ ○ /inventory                              4.57 kB         165 kB
+├ ○ /login                                  8.96 kB         164 kB
+├ ○ /orders                                  110 kB         271 kB
+├ ○ /products                               6.42 kB         167 kB
+├ ƒ /products/[categoryId]/[subcategoryId]   3.1 kB         164 kB
+├ ○ /profile                                3.76 kB         165 kB
+├ ○ /settings                               4.75 kB         166 kB
+├ ○ /shop                                   6.07 kB         144 kB
+├ ○ /shop/about                             5.26 kB         139 kB
+├ ○ /shop/accessibility                     5.65 kB         140 kB
+├ ○ /shop/account                           7.11 kB         141 kB
+├ ○ /shop/account/orders                    2.81 kB         140 kB
+├ ƒ /shop/account/orders/[id]               2.29 kB         139 kB
+├ ○ /shop/careers                           6.65 kB         140 kB
+├ ○ /shop/cart                              2.66 kB         139 kB
+├ ○ /shop/cart/checkout                     8.35 kB         137 kB
+├ ○ /shop/contact                           4.95 kB         138 kB
+├ ○ /shop/cookies                           5.23 kB         140 kB
+├ ○ /shop/helpcenter                        5.94 kB         139 kB
+├ ○ /shop/kids                              3.32 kB         141 kB
+├ ○ /shop/men                                3.9 kB         142 kB
+├ ○ /shop/ourresponsibility                 5.56 kB         140 kB
+├ ○ /shop/privacy                           6.44 kB         140 kB
+├ ƒ /shop/products/[id]                     4.05 kB         142 kB
+├ ○ /shop/promo-demo                        1.65 kB         174 kB
+├ ○ /shop/returnexchange                    5.74 kB         139 kB
+├ ○ /shop/shippinginfo                      5.15 kB         139 kB
+├ ○ /shop/signup                            4.01 kB         137 kB
+├ ○ /shop/storelocations                    5.72 kB         139 kB
+├ ○ /shop/terms                             6.33 kB         140 kB
+├ ○ /shop/trackorder                        3.91 kB         141 kB
+├ ○ /shop/wishlist                            799 B         102 kB
+├ ○ /shop/women                             3.68 kB         141 kB
+├ ○ /site                                   9.66 kB         170 kB
+├ ○ /users                                  5.21 kB         166 kB
+└ ○ /vendors                                 3.7 kB         165 kB
++ First Load JS shared by all                102 kB
+  ├ chunks/1684-fdc9db56024a77ae.js         46.3 kB
+  ├ chunks/4bd1b696-32f5b51c6f5ea5ca.js     53.2 kB
+  └ other shared chunks (total)             2.03 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
